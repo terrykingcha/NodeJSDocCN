@@ -18,16 +18,13 @@
 
 ### console
 
-用于显示标准输出以及错误。参见[标准输入输出](stdio.html)章节。
+用于向stdout和stderr打印信息。参见[标准输入输出](stdio.html)章节。
 
 ### Buffer
 
-用于处理二进制数据。 参见 [缓冲类](buffers.html)章节。
+用于处理二进制数据。 参见[缓冲类](buffers.html)章节。
 
 ### require()
-
-To require modules. See the [Modules](modules.html#modules) section.
-`require` isn't actually a global but rather local to each module.
 
 用于加载模块。参见[模块](modules.html#modules)章节。
 `require`并不是全局函数，而是每个模块的顶级函数。
