@@ -57,11 +57,6 @@ Node采用一个简单的模块加载系统。在Node中，文件和模块是一
     var b = require('./b.js');
     console.log('in main, a.done=%j, b.done=%j', a.done, b.done);
 
-When `main.js` loads `a.js`, then `a.js` in turn loads `b.js`.  At that
-point, `b.js` tries to load `a.js`.  In order to prevent an infinite
-loop an **unfinished copy** of the `a.js` exports object is returned to the
-`b.js` module.  `b.js` then finishes loading, and its exports object is
-provided to the `a.js` module.
 在`main.js`加载`a.js`过程中，`a.js`又加载`b.js`。此时此刻，`b.js`会试图再去加载`a.js`。
 为了避免引起无限循环，`a.js`中需导出的对象转换成一个**不完整的副本**，返回给`b.js`模块。
 然后`b.js`就完成了加载的工作，并把自身要导出对象提供给`a.js`模块。
@@ -204,7 +199,8 @@ Note that in order to do this, you must get a reference to the `module`
 object.  Since `require()` returns the `exports`, and the `module` is
 typically *only* available within a specific module's code, it must be
 explicitly exported in order to be used.
-注意，为了使用require方法，必须先获得对`module`对象的引用。在`require()`返回`exports`之后，
+注意，为了使用require方法，必须先获得对`module`对象的引用。因为`require()`会返回`exports`，
+并且`module`通常只在特殊的模块代码中有效，所以只在需要用到时才导出。
 
 
 ### 总结一下...
@@ -272,67 +268,45 @@ node就会搜索这些路径。（注意：在Windows里，`NODE_PATH`中用分�
 
 ### 访问主模块
 
-When a file is run directly from Node, `require.main` is set to its
-`module`. That means that you can determine whether a file has been run
-directly by testing
+当一个文件直接通过Node来运行时，`require.main`就设置为文件的`module`。也就是说，
+你可以通过测试来判断文件是否是直接运行的：
 
     require.main === module
 
-For a file `foo.js`, this will be `true` if run via `node foo.js`, but
-`false` if run by `require('./foo')`.
+对于`foo.js`这个文件，在通过`node foo.js`运行时上述逻辑判断的结果是`true`，
+而通过`require('./foo')`运行时结果是`false`。
 
-Because `module` provides a `filename` property (normally equivalent to
-`__filename`), the entry point of the current application can be obtained
-by checking `require.main.filename`.
+`module`提供了`filename`的属性（通常等价于`__filename`），因此通过检查`require.main.filename`可以获得
+当前应用的入口程序。
 
-## Addenda: Package Manager Tips
+## 附录: 包管理技巧
 
-The semantics of Node's `require()` function were designed to be general
-enough to support a number of sane directory structures. Package manager
-programs such as `dpkg`, `rpm`, and `npm` will hopefully find it possible to
-build native packages from Node modules without modification.
+Node的`require()`函数的语义被设计的足够通用化，以支持各种常规目录结构。
+包管理程序如 `dpkg`，`rpm`和`npm`将不用修改就能够从Node模块构建本地包。
 
-Below we give a suggested directory structure that could work:
+以下给出一个可行的目录建构建议：
 
-Let's say that we wanted to have the folder at
-`/usr/lib/node/<some-package>/<some-version>` hold the contents of a
-specific version of a package.
+比方说，有如下目录`/usr/lib/node/<some-package>/<some-version>`，存放的内容是某个包的一个特定版本。
 
-Packages can depend on one another. In order to install package `foo`, you
-may have to install a specific version of package `bar`.  The `bar` package
-may itself have dependencies, and in some cases, these dependencies may even
-collide or form cycles.
+包可以依赖其它包。为了安装`foo`这个包，可能需要安装包`bar`的一个指定版本。包`bar`也会有自身的依赖关系，
+而且在一些情况下，这些依赖关系甚至会发生冲突或形成循环。
 
-Since Node looks up the `realpath` of any modules it loads (that is,
-resolves symlinks), and then looks for their dependencies in the
-`node_modules` folders as described above, this situation is very simple to
-resolve with the following architecture:
+因为Node会查找它所加载的模块的`真实路径`（也就是说会解析符号链接），
+然后按照上文描述的方式在`node_modules`目录中寻找依赖关系，所以可以使用如下的目录结构解决这个问题：
 
-* `/usr/lib/node/foo/1.2.3/` - Contents of the `foo` package, version 1.2.3.
-* `/usr/lib/node/bar/4.3.2/` - Contents of the `bar` package that `foo`
-  depends on.
-* `/usr/lib/node/foo/1.2.3/node_modules/bar` - Symbolic link to
-  `/usr/lib/node/bar/4.3.2/`.
-* `/usr/lib/node/bar/4.3.2/node_modules/*` - Symbolic links to the packages
-  that `bar` depends on.
 
-Thus, even if a cycle is encountered, or if there are dependency
-conflicts, every module will be able to get a version of its dependency
-that it can use.
+* `/usr/lib/node/foo/1.2.3/` - 包`foo`的1.2.3版本内容。
+* `/usr/lib/node/bar/4.3.2/` - 包`foo`依赖的包`bar`的内容。
+* `/usr/lib/node/foo/1.2.3/node_modules/bar` - 指向`/usr/lib/node/bar/4.3.2/`的符号链接。.
+* `/usr/lib/node/bar/4.3.2/node_modules/*` - 指向包`bar`所依赖的包的符号链接。
 
-When the code in the `foo` package does `require('bar')`, it will get the
-version that is symlinked into `/usr/lib/node/foo/1.2.3/node_modules/bar`.
-Then, when the code in the `bar` package calls `require('quux')`, it'll get
-the version that is symlinked into
-`/usr/lib/node/bar/4.3.2/node_modules/quux`.
+因此即便存在循环依赖或依赖冲突，每个模块还是可以获得它所依赖的包的一个可用版本。
 
-Furthermore, to make the module lookup process even more optimal, rather
-than putting packages directly in `/usr/lib/node`, we could put them in
-`/usr/lib/node_modules/<name>/<version>`.  Then node will not bother
-looking for missing dependencies in `/usr/node_modules` or `/node_modules`.
+当包`foo`的代码中调用`require('bar')`时，将会获得符号链接`/usr/lib/node/foo/1.2.3/node_modules/bar`指向的版本。
+同样，当包`bar`中的代码调用`require('queue')`，将获得符号链接`/usr/lib/node/bar/4.3.2/node_modules/quux`指向的版本。
 
-In order to make modules available to the node REPL, it might be useful to
-also add the `/usr/lib/node_modules` folder to the `$NODE_PATH` environment
-variable.  Since the module lookups using `node_modules` folders are all
-relative, and based on the real path of the files making the calls to
-`require()`, the packages themselves can be anywhere.
+此外，为了进一步优化模块搜索过程，比起将包放在`/usr/lib/node`目录中，倒不如放在`/usr/lib/node_modules/<name>/<version>`目录中。
+这样node就不会麻烦到还要去`/usr/node_modules`或`/node_modules`目录中寻找依赖的包。
+
+为了在node REPL中能用到这些模块，可能需要将`/usr/lib/node_modules`目录加入到`$NODE_PATH`环境变量中。
+因为用到`node_modules`目录的模块查找都是相对的，并且是基于调用`require()`的文件的真实路径，所以包本身可以放在任意位置。
