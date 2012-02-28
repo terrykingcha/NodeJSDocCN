@@ -7,7 +7,7 @@
    创建对象，调用函数等。大部分代码位于`v8.h`的头文件中（在Node源代码中的路径是`deps/v8/include/v8.h`）。
 
  - [libuv](https://github.com/joyent/libuv)，C的事件循环库。每当需要等待文件描述符（file descriptor）可读，
-   或等一个待定时器，抑或等待接受一个信号，都需要用到libuv的接口。也就是说，只要执行了I/O操作，就会用到libuv。
+   或等待待定时器，抑或等待接受一个信号，都需要用到libuv的接口。也就是说，只要执行了I/O操作，就会用到libuv。
 
  - 内部Node库。其中最重要的就是被广泛派生的`node::ObjectWrap`基类。
 
