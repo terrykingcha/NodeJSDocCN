@@ -2,7 +2,7 @@
 
 ###module_cn
 
-  - 关于module.require的作用(line 313)：
+  - 关于`module.require`的作用(line 313)：
 
 >Note that in order to do this, you must get a reference to the `module`
 >object.  Since `require()` returns the `exports`, and the `module` is
