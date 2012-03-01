@@ -5,12 +5,10 @@
 @include modules_cn
 @include addons_cn
 @include process_cn
-@include constants_cn
 @include util_cn
-@include freelist_cn
 @include events_cn
-@include buffers_cn
-@include streams_cn
+@include buffer_cn
+@include stream_cn
 @include crypto_cn
 @include tls_cn
 @include string_decoder_cn
@@ -26,7 +24,7 @@
 @include readline_cn
 @include repl_cn
 @include vm_cn
-@include child_processes_cn
+@include child_process_cn
 @include assert_cn
 @include tty_cn
 @include zlib_cn
@@ -34,6 +32,5 @@
 @include debugger_cn
 @include cluster_cn
 
-# Appendixes
+
 @include appendix_1_cn
-@include appendix_2_cn

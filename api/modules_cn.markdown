@@ -1,4 +1,6 @@
-## 模块
+# 模块
+
+<!--name=module-->
 
 Node采用一个简单的模块加载系统。在Node中，文件和模块是一一对应的。
 下面的例子展示了`foo.js`文件如何在相同的目录中加载`circle.js`模块。
@@ -26,7 +28,11 @@ Node采用一个简单的模块加载系统。在Node中，文件和模块是一
 
 模块的本地变量是私有的。在上面的例子中，变量`PI`就是`circle.js`私有的。
 
-### 循环嵌套
+在`require("module")`模块中实现了整个模块系统。
+
+## 循环嵌套
+
+<!--type=misc-->
 
 当一个模块存在`require()`的循环调用时，它会在完成执行前就返回出去了。
 
@@ -76,7 +82,9 @@ Node采用一个简单的模块加载系统。在Node中，文件和模块是一
 
 如果在你的程序中有循环依赖的模块，请确保按照如上的方式来设计它们。
 
-### 核心模块
+## 核心模块
+
+<!--type=misc-->
 
 node中有一些编译成二进制的模块。在此后的文档中会对其进行详细的阐述。
 
@@ -85,7 +93,9 @@ node中有一些编译成二进制的模块。在此后的文档中会对其进�
 当诸如'http'这样的标识被传递给`require()`时，其指定的核心模块，
 在这里也就是内建的HTTP模块，会被优先加载并返回，即使有同名文件存在也会如此。
 
-### 文件模块
+## 文件模块
+
+<!--type=misc-->
 
 如果找不到确切的文件名，node会为其添加`.js`，`.json`或者`.node`等扩展名，再尝试加载这些文件。
 
@@ -101,7 +111,9 @@ node中有一些编译成二进制的模块。在此后的文档中会对其进�
 
 如果给定的路径不存在，`require()`会抛出一个错误，该错误的`code`属性会设置成`'MODULE_NOT_FOUND'`。
 
-### 从`node_modules`文件夹加载
+## 从`node_modules`文件夹加载
+
+<!--type=misc-->
 
 如果传递给`require()`的标识不是一个原生模块，并且也不是以 `'/'`, `'../'`, or `'./'`的文件名。
 那么，node将从当前模块的父目录开始，在其`/node_modules`子目录中尝试加载。
@@ -118,7 +130,9 @@ node将会依此查找以下位置：
 
 这使得程序可以各自处理依赖关系，因而不发生冲突。
 
-### 目录模块化
+## 目录模块化
+
+<!--type=misc-->
 
 目录模块化便于组织程序和库，把代码集中在自身所处的目录中，并提供单一的入口来指向这个库。
 共有三种方式可以将一个目录当作参数传递给`require()`。
@@ -139,7 +153,9 @@ node将会依此查找以下位置：
 * `./some-library/index.js`
 * `./some-library/index.node`
 
-### 缓存
+## 缓存
+
+<!--type=misc-->
 
 模块在第一次加载后，就被缓存了。这意味着（在其他地方）每次调用`require('foo')`时，如确定是同一个文件，都会准确的
 返回相同对象。
@@ -149,12 +165,27 @@ node将会依此查找以下位置：
 
 如果你希望一个模块多次执行其代码，那么把它导出为一个函数，并调用这个函数。
 
-#### 模块缓存的注意项
+## 模块缓存的注意项
+
+<!--type=misc-->
 
 模块是基于解析过后的文件名来进行缓存的。随着调用它的模块所处位置不同，
 被解析模块会拥有不同的文件名。既然文件名不同，也就不能保证`require('foo')`始终返回同一个对象。
 
-### 模块的exports对象（module.exports）
+## The `module` Object
+
+<!-- type=var -->
+<!-- name=module -->
+
+* {Object}
+
+在每个模块中，自由变量（free variable）`module`引用的是一个指向当前模块的对象。
+`module.exports`和`exports`实际上是同一个对象。`module`实际上不是一个全局变量，
+是每个模块的顶级变量。
+
+### module.exports
+
+* {Object}
 
 `exports`是有模块系统创建的。有时候并不期望如此，很多情况下想把类的实例当作一个模块。
 于是，就需要把期望导出的对象赋值给`module.exports`.例如，假设正在创建一个名为`a.js`的模块：
@@ -191,19 +222,55 @@ y.js:
     console.log(x.a);
 
 
-### 模块的require方法（module.require）
+### module.require(id)
+
+* `id` {String}
+* Return: {Object} `导出`解析后的模块
 
 `module.require`方法提供了类似于从原始模块中调用`require()`的一种模块加载方式。
 
-Note that in order to do this, you must get a reference to the `module`
-object.  Since `require()` returns the `exports`, and the `module` is
-typically *only* available within a specific module's code, it must be
-explicitly exported in order to be used.
 注意，为了使用require方法，必须先获得对`module`对象的引用。因为`require()`会返回`exports`，
 并且`module`通常只在特殊的模块代码中有效，所以只在需要用到时才导出。
 
 
-### 总结一下...
+### module.id
+
+* {String}
+
+模块的标识。通常是解析后的完整文件名。
+
+
+### module.filename
+
+* {String}
+
+模块的完整文件名。
+
+
+### module.loaded
+
+* {Boolean}
+
+判断模块是否完成加载，或是否在加载中。
+
+
+### module.parent
+
+* {Module Object}
+
+加载本模块的父模块。
+
+
+### module.children
+
+* {Array}
+
+被本模块加载的模块对象
+
+
+## 总结一下...
+
+<!-- type=misc -->
 
 可使用`require.resolve()`函数，获得调用`require()`时将加载的确切文件名。
 
@@ -250,7 +317,9 @@ explicitly exported in order to be used.
        c. let I = I - 1
     6. return DIRS
 
-### 从全局目录中加载
+## 从全局目录中加载
+
+<!-- type=misc -->
 
 如果`NODE_PATH`环境变量的值是以冒号分隔的绝对路径列表，那么当在别处找不到模块时，
 node就会搜索这些路径。（注意：在Windows里，`NODE_PATH`中用分号来代替冒号的。）
@@ -266,7 +335,9 @@ node就会搜索这些路径。（注意：在Windows里，`NODE_PATH`中用分�
 这样做的原因有历史渊源。我们鼓励开发者把依赖包都放在`node_modules`目录下。
 这样不仅加载的更快，而且更可靠。
 
-### 访问主模块
+## 访问主模块
+
+<!-- type=misc -->
 
 当一个文件直接通过Node来运行时，`require.main`就设置为文件的`module`。也就是说，
 你可以通过测试来判断文件是否是直接运行的：
@@ -280,6 +351,8 @@ node就会搜索这些路径。（注意：在Windows里，`NODE_PATH`中用分�
 当前应用的入口程序。
 
 ## 附录: 包管理技巧
+
+<!-- type=misc -->
 
 Node的`require()`函数的语义被设计的足够通用化，以支持各种常规目录结构。
 包管理程序如 `dpkg`，`rpm`和`npm`将不用修改就能够从Node模块构建本地包。

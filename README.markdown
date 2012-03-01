@@ -1,8 +1,18 @@
-## 翻译斟酌
+# 官方文档同步标识
 
-###module_cn
+ - Version: v0.6.11
+ - Commit hash: 7343f8e776146bf4461348a9130f2c5040a0dfa0
+ - Date: 2012/2/10 13:58:58
 
-  - 关于`module.require`的作用(line 313)：
+# 翻译斟酌
+
+##addons_cn
+
+ - Addon patterns是否保留英文原文（line 80）
+
+##module_cn
+
+ - 关于`module.require`的作用(line 385)
 
 >Note that in order to do this, you must get a reference to the `module`
 >object.  Since `require()` returns the `exports`, and the `module` is

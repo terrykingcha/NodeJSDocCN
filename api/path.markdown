@@ -1,15 +1,12 @@
-## Path
+# Path
 
 This module contains utilities for handling and transforming file
 paths.  Almost all these methods perform only string transformations.
 The file system is not consulted to check whether paths are valid.
 
-`path.exists` and `path.existsSync` are the exceptions, and should
-logically be found in the fs module as they do access the file system.
-
 Use `require('path')` to use this module.  The following methods are provided:
 
-### path.normalize(p)
+## path.normalize(p)
 
 Normalize a string path, taking care of `'..'` and `'.'` parts.
 
@@ -23,7 +20,7 @@ Example:
     // returns
     '/foo/bar/baz/asdf'
 
-### path.join([path1], [path2], [...])
+## path.join([path1], [path2], [...])
 
 Join all arguments together and normalize the resulting path.
 Non-string arguments are ignored.
@@ -38,7 +35,7 @@ Example:
     // returns
     'foo/bar'
 
-### path.resolve([from ...], to)
+## path.resolve([from ...], to)
 
 Resolves `to` to an absolute path.
 
@@ -77,7 +74,7 @@ Examples:
     // if currently in /home/myself/node, it returns
     '/home/myself/node/wwwroot/static_files/gif/image.gif'
 
-### path.relative(from, to)
+## path.relative(from, to)
 
 Solve the relative path from `from` to `to`.
 
@@ -97,7 +94,7 @@ Examples:
     // returns
     '../../impl/bbb'
 
-### path.dirname(p)
+## path.dirname(p)
 
 Return the directory name of a path.  Similar to the Unix `dirname` command.
 
@@ -107,7 +104,7 @@ Example:
     // returns
     '/foo/bar/baz/asdf'
 
-### path.basename(p, [ext])
+## path.basename(p, [ext])
 
 Return the last portion of a path.  Similar to the Unix `basename` command.
 
@@ -121,7 +118,7 @@ Example:
     // returns
     'quux'
 
-### path.extname(p)
+## path.extname(p)
 
 Return the extension of the path, from the last '.' to end of string
 in the last portion of the path.  If there is no '.' in the last portion
@@ -140,16 +137,3 @@ an empty string.  Examples:
     // returns
     ''
 
-### path.exists(p, [callback])
-
-Test whether or not the given path exists by checking with the file system.
-Then call the `callback` argument with either true or false.  Example:
-
-    path.exists('/etc/passwd', function (exists) {
-      util.debug(exists ? "it's there" : "no passwd!");
-    });
-
-
-### path.existsSync(p)
-
-Synchronous version of `path.exists`.
