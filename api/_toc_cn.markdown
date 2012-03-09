@@ -9,7 +9,7 @@
 * [进程对象（process）](process.html)
 * [常用工具（util）](util.html)
 * [事件模块（events）](events.html)
-* [缓冲类（Buffer）](buffer.html)
+* [缓冲器类（Buffer）](buffer.html)
 * [流接口（Stream）](stream.html)
 * [加密模块（crypto）](crypto.html)
 * [安全传输协议（tls/ssl）](tls.html)
