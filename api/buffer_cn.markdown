@@ -57,7 +57,7 @@ Buffer类是一个全局类型，可以直接处理二进制数据。它有多�
 * `length` Number，可选
 * `encoding` String，可选，默认为'utf8'
 
-用给定的编码在`offset`偏移处写入`string`到缓冲器中。`offset`默认为0，`encoding`默认为`'utf-8'`。
+用给定的编码在`offset`偏移处写入`string`到缓冲器中。`offset`默认为`0`，`encoding`默认为`'utf-8'`。
 `length`是需要写入的字节数。方法返回成功写入的字节数。如果`缓冲器`没有足够的空间来转载整个字符串，将会
 写入一个不完整的字符串。`length`默认为`buffer.length - offset`。这个方法不会写入不完整的字符。
 
@@ -151,7 +151,7 @@ Buffer类是一个全局类型，可以直接处理二进制数据。它有多�
 * `sourceStart` Number，可选，默认为0
 * `sourceEnd` Number，可选，默认为0
 
-在缓冲器之间进行复制。源和目标的区间是可以重叠的。`targetStart`和`sourceStart`默认为0。
+在缓冲器之间进行复制。源和目标的区间是可以重叠的。`targetStart`和`sourceStart`默认为`0`。
 `sourceEnd`默认为`buffer.length`。
 
 示例：构建两个缓冲器，然后把`buf1`从第16到第19个字节复制到第8个字节开始的`buf2`中。
@@ -175,7 +175,7 @@ Buffer类是一个全局类型，可以直接处理二进制数据。它有多�
 * `start` Number，可选，默认为0
 * `end` Number，可选，默认为0
 
-返回一个新缓冲器，它引用的内存就是原缓冲器从`start`（默认为0）到`end`（默认为`buffer.length`）的索引区间。
+返回一个新缓冲器，它引用的内存就是原缓冲器从`start`（默认为`0`）到`end`（默认为`buffer.length`）的索引区间。
 
 **改变新缓冲器片段同样会改变原缓冲器中相对应的那块内存！**
 
