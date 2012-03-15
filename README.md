@@ -6,16 +6,16 @@
 
 # 中文目录和翻译进度
 
-* [摘要](./blob/master/api/synopsis_cn.markdown)
-* [全局对象](blob/master/api/globals_cn.markdown)
-* [标准输入输出（console）](blob/master/api/stdio_cn.markdown)
-* [定时器](blob/master/api/timers_cn.markdown)
-* [模块](blob/master/api/modules_cn.markdown)
-* [C/C++ 扩展](blob/master/api/addons_cn.markdown)
-* [进程对象（process）](blob/master/api/process_cn.markdown)
-* [常用工具（util）](blob/master/api/util_cn.markdown)
-* [事件模块（events）](blob/master/api/events_cn.markdown)
-* [缓冲器类（Buffer）](blob/master/api/buffer_cn.markdown)
+* [摘要](./NodeJSDocCN/blob/master/api/synopsis_cn.markdown)
+* [全局对象](./NodeJSDocCN/blob/master/api/globals_cn.markdown)
+* [标准输入输出（console）](./NodeJSDocCN/blob/master/api/stdio_cn.markdown)
+* [定时器](./NodeJSDocCN/blob/master/api/timers_cn.markdown)
+* [模块](./NodeJSDocCN/blob/master/api/modules_cn.markdown)
+* [C/C++ 扩展](./NodeJSDocCN/blob/master/api/addons_cn.markdown)
+* [进程对象（process）](./NodeJSDocCN/blob/master/api/process_cn.markdown)
+* [常用工具（util）](./NodeJSDocCN/blob/master/api/util_cn.markdown)
+* [事件模块（events）](./NodeJSDocCN/blob/master/api/events_cn.markdown)
+* [缓冲器类（Buffer）](./NodeJSDocCN/blob/master/api/buffer_cn.markdown)
 * 流接口（Stream）
 * 加密模块（crypto）
 * 安全传输协议（tls/ssl）
