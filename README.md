@@ -16,7 +16,7 @@
 * [常用工具（util）](./NodeJSDocCN/blob/master/api/util_cn.markdown)
 * [事件模块（events）](./NodeJSDocCN/blob/master/api/events_cn.markdown)
 * [缓冲器类（Buffer）](./NodeJSDocCN/blob/master/api/buffer_cn.markdown)
-* 流接口（Stream）
+* [流接口（Stream）](./NodeJSDocCN/blob/master/api/stream_cn.markdown)
 * 加密模块（crypto）
 * 安全传输协议（tls/ssl）
 * 字符串解码
@@ -48,9 +48,9 @@
 
  - Addon patterns是否保留英文原文（line 80）
 
-##module_cn
+##modules_cn
 
- - 关于`module.require`的作用(line 385)
+ - 关于`module.require`的作用（line 232）
 
 >Note that in order to do this, you must get a reference to the `module`
 >object.  Since `require()` returns the `exports`, and the `module` is
@@ -59,3 +59,13 @@
 
 >注意，为了使用require方法，必须先获得对`module`对象的引用。因为`require()`会返回`exports`，
 >并且`module`通常只在特殊的模块代码中有效，所以只在需要用到时才导出。
+
+##stream_cn
+
+ - 关于`incoming`的正确释义（line 40）
+
+>Emitted when the underlying file descriptor has been closed. Not all streams
+>will emit this.  (For example, an incoming HTTP request will not emit
+>`'close'`.)
+
+>当底层的文件描述符被关闭时触发。并不是所有的流都会触发这个事件。（例如，一个达到的HTTP请求就不会触发`'close'`。）
