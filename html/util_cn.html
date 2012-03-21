@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>常用工具 Node.js v0.6.11 中文手册和文档</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/sh.css">
+  <link rel="canonical" href="http://nodejs.org/api/util_cn.html">
+</head>
+<body class="alt apidoc" id="api-section-util_cn">
+    <div id="intro" class="interior">
+        <a href="/" title="Go back to the home page">
+            <img id="logo" src="http://nodejs.org/images/logo-light.png" alt="node.js">
+        </a>
+    </div>
+    <div id="content" class="clearfix">
+        <div id="column2" class="interior">
+            <ul>
+                <li><a href="http://www.cnodejs.org" class="home">NodeJS中文社区</a></li>
+                <li><a href="http://www.nodejs.org/#download" class="download"  target="_blank">NodeJS下载</a></li>
+                <li><a href="http://cnodejs.org/tag/%E7%A4%BE%E5%8C%BA%E6%B4%BB%E5%8A%A8" class="community">社区活动</a></li>
+                <li><a href="#" class="docs current">API文档</a></li>                
+                <li><a href="http://nodejob.cnodejs.net/" class="jobs">工作机会</a></li>
+                <li><a href="http://cnodejs.org/about" class="about">关于我们</a></li>
+                <li><a href="http://www.nodejs.org" class="home">NodeJS官网</a></li>
+                <li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
+            </ul>
+            <p class="twitter"><a href="http://weibo.com/cnodejs">@cnodejs</a></p>
+        </div>
+
+        <div id="column1" class="interior">
+          <header>
+            <h1>Node.js v0.6.11 中文手册和文档</h1>
+            <div id="gtoc">
+              <p><a href="index_cn.html" name="toc">索引</a></p>
+            </div>
+            <hr>
+          </header>
+
+          <div id="toc">
+            <h2>目录</h2>
+            <ul>
+<li><a href="#util_cn">常用工具</a><ul>
+<li><a href="#util_cn_util_format">util.format()</a></li>
+<li><a href="#util_cn_util_debug_string">util.debug(string)</a></li>
+<li><a href="#util_cn_util_log_string">util.log(string)</a></li>
+<li><a href="#util_cn_util_inspect_object_showhidden_depth_colors">util.inspect(object, [showHidden], [depth], [colors])</a></li>
+<li><a href="#util_cn_util_isarray_object">util.isArray(object)</a></li>
+<li><a href="#util_cn_util_isregexp_object">util.isRegExp(object)</a></li>
+<li><a href="#util_cn_util_isdate_object">util.isDate(object)</a></li>
+<li><a href="#util_cn_util_iserror_object">util.isError(object)</a></li>
+<li><a href="#util_cn_util_pump_readablestream_writablestream_callback">util.pump(readableStream, writableStream, [callback])</a></li>
+<li><a href="#util_cn_util_inherits_constructor_superconstructor">util.inherits(constructor, superConstructor)</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+
+          <div id="apicontent">
+            <h1>常用工具<span><a class="mark" href="#util_cn" id="util_cn">#</a></span></h1>
+<p>这些函数都包含在<code>&apos;util&apos;</code>模块中。通过使用<code>require(&apos;util&apos;)</code>可以访问它们。
+
+
+</p>
+<h2>util.format()<span><a class="mark" href="#util_cn_util_format" id="util_cn_util_format">#</a></span></h2>
+<p>返回一个格式化后的字符串，第一个参数是类似<code>printf</code>的格式。
+
+</p>
+<p>第一个参数可以包含多个占位符，也可以没有。每个占位符会被替换成其相关参数转换后的值。
+支持的占位符如下：
+
+</p>
+<ul>
+<li><code>%s</code> - 字符串。</li>
+<li><code>%d</code> - 数字 (包括整型和浮点型)。</li>
+<li><code>%j</code> - JSON。</li>
+<li><code>%%</code> - 百分符（<code>&apos;%&apos;</code>）。 这不会被当作参数对待。</li>
+</ul>
+<p>如果占位符没有相对应的参数，那么就不会被替换掉。
+
+</p>
+<pre><code>util.format(&apos;%s:%s&apos;, &apos;foo&apos;); // &apos;foo:%s&apos;</code></pre>
+<p>如果参数的个数多于占位符，多余的参数会通过<code>util.inspect()</code>转换成字符串，并以空格分隔符拼接在一起。
+
+</p>
+<pre><code>util.format(&apos;%s:%s&apos;, &apos;foo&apos;, &apos;bar&apos;, &apos;baz&apos;); // &apos;foo:bar baz&apos;</code></pre>
+<p>如果第一个参数不是带格式的字符串，那么<code>util.format()</code>会返回把所有参数用空格分隔拼接后的字符串。
+每个参数都用<code>util.inspect()</code>转换成字符串。
+
+</p>
+<pre><code>util.format(1, 2, 3); // &apos;1 2 3&apos;</code></pre>
+<h2>util.debug(string)<span><a class="mark" href="#util_cn_util_debug_string" id="util_cn_util_debug_string">#</a></span></h2>
+<p>一个同步输出函数。它会阻塞进程，并马上输入<code>string</code>给<code>stderr</code>。
+
+</p>
+<pre><code>require(&apos;util&apos;).debug(&apos;message on stderr&apos;);</code></pre>
+<h2>util.log(string)<span><a class="mark" href="#util_cn_util_log_string" id="util_cn_util_log_string">#</a></span></h2>
+<p>在<code>stdout</code>上输出带有时间戳的信息。
+
+</p>
+<pre><code>require(&apos;util&apos;).log(&apos;Timestamped message.&apos;);</code></pre>
+<h2>util.inspect(object, [showHidden], [depth], [colors])<span><a class="mark" href="#util_cn_util_inspect_object_showhidden_depth_colors" id="util_cn_util_inspect_object_showhidden_depth_colors">#</a></span></h2>
+<p>返回<code>object</code>的一个有助于调试的描述串。
+
+</p>
+<p>如果<code>showHidden</code>设置为<code>true</code>，则该对象的不可枚举属性也会显示出来。默认为<code>false</code>。
+
+</p>
+<p><code>depth</code>参数指定了<code>inspect</code>在格式化对象时递归的次数。这在显示大而复杂的对象时非常有帮助。
+
+</p>
+<p>默认是只会递归两次。如果想要无限次递归，那么就传<code>null</code>值给<code>depth</code>。
+
+</p>
+<p>如果<code>colors</code>设置为<code>true</code>，那么就会以ANSI格式的高亮代码来输出。默认为<code>false</code>。
+
+</p>
+<p>显示<code>util</code>对象所有属性的例子：
+
+</p>
+<pre><code>var util = require(&apos;util&apos;);
+
+console.log(util.inspect(util, true, null));</code></pre>
+<h2>util.isArray(object)<span><a class="mark" href="#util_cn_util_isarray_object" id="util_cn_util_isarray_object">#</a></span></h2>
+<p>如果给定的&quot;object&quot;是一个<code>数组对象（Array）</code>就返回<code>true</code>，否则返回<code>false</code>。
+
+</p>
+<pre><code>var util = require(&apos;util&apos;);
+
+util.isArray([])
+  // true
+util.isArray(new Array)
+  // true
+util.isArray({})
+  // false</code></pre>
+<h2>util.isRegExp(object)<span><a class="mark" href="#util_cn_util_isregexp_object" id="util_cn_util_isregexp_object">#</a></span></h2>
+<p>如果给定的&quot;object&quot;是一个<code>正则对象（RegExp）</code>就返回<code>true</code>，否则返回<code>false</code>。
+
+</p>
+<pre><code>var util = require(&apos;util&apos;);
+
+util.isRegExp(/some regexp/)
+  // true
+util.isRegExp(new RegExp(&apos;another regexp&apos;))
+  // true
+util.isRegExp({})
+  // false</code></pre>
+<h2>util.isDate(object)<span><a class="mark" href="#util_cn_util_isdate_object" id="util_cn_util_isdate_object">#</a></span></h2>
+<p>如果给定的&quot;object&quot;是一个<code>日期对象（Date）</code>就返回<code>true</code>，否则返回<code>false</code>。
+
+</p>
+<pre><code>var util = require(&apos;util&apos;);
+
+util.isDate(new Date())
+  // true
+util.isDate(Date())
+  // false (without &apos;new&apos; returns a String)
+util.isDate({})
+  // false</code></pre>
+<h2>util.isError(object)<span><a class="mark" href="#util_cn_util_iserror_object" id="util_cn_util_iserror_object">#</a></span></h2>
+<p>如果给定的&quot;object&quot;是一个<code>错误对象（Error）</code>就返回<code>true</code>，否则返回<code>false</code>。
+
+</p>
+<pre><code>var util = require(&apos;util&apos;);
+
+util.isError(new Error())
+  // true
+util.isError(new TypeError())
+  // true
+util.isError({ name: &apos;Error&apos;, message: &apos;an error occurred&apos; })
+  // false</code></pre>
+<h2>util.pump(readableStream, writableStream, [callback])<span><a class="mark" href="#util_cn_util_pump_readablestream_writablestream_callback" id="util_cn_util_pump_readablestream_writablestream_callback">#</a></span></h2>
+<p>这还是个在试验阶段的方法（译者注：请慎用）。
+
+</p>
+<p>从<code>readableStream</code>读取数据，并发送给<code>writableStream</code>。当<code>writableStream.write(data)</code>返回<code>false</code>时，
+<code>readableStream</code>会暂停，直到在<code>writableStream</code>上发生<code>drain</code>事件。在<code>writableStream</code>被关闭或发生错误时，
+<code>callback</code>被调用，并传入唯一的error参数。
+
+
+</p>
+<h2>util.inherits(constructor, superConstructor)<span><a class="mark" href="#util_cn_util_inherits_constructor_superconstructor" id="util_cn_util_inherits_constructor_superconstructor">#</a></span></h2>
+<p>从一个构造器（<a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object/constructor">constructor</a>）继承
+原型方法到另一个构造器中。新构造器的<code>constructor</code>属性会被设置成由<code>superConstructor</code>创建的新对象
+
+</p>
+<p>此外比较便捷的途径，还可以通过<code>constructor.super_</code>属性来访问<code>superConstructor</code>。
+
+</p>
+<pre><code>var util = require(&quot;util&quot;);
+var events = require(&quot;events&quot;);
+
+function MyStream() {
+    events.EventEmitter.call(this);
+}
+
+util.inherits(MyStream, events.EventEmitter);
+
+MyStream.prototype.write = function(data) {
+    this.emit(&quot;data&quot;, data);
+}
+
+var stream = new MyStream();
+
+console.log(stream instanceof events.EventEmitter); // true
+console.log(MyStream.super_ === events.EventEmitter); // true
+
+stream.on(&quot;data&quot;, function(data) {
+    console.log(&apos;Received data: &quot;&apos; + data + &apos;&quot;&apos;);
+})
+stream.write(&quot;It works!&quot;); // Received data: &quot;It works!&quot;</code></pre>
+
+          </div>
+        </div>
+    </div>
+    <div id="footer">
+        <ul class="clearfix">
+		
+		<li><a href="http://www.cnodejs.org" class="home">NodeJS中文社区</a></li>
+		<li><a href="http://www.nodejs.org/#download" class="download" target="_blank">NodeJS下载</a></li>
+		<li><a href="http://cnodejs.org/tag/%E7%A4%BE%E5%8C%BA%E6%B4%BB%E5%8A%A8" class="community">社区活动</a></li>
+		<li><a href="#" class="docs current">API文档</a></li>                
+		<li><a href="http://nodejob.cnodejs.net/" class="jobs">工作机会</a></li>
+		<li><a href="http://cnodejs.org/about" class="about">关于我们</a></li>
+		<li><a href="http://www.nodejs.org" class="home">NodeJS官网</a></li>
+		<li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
+             <li><a href="http://weibo.com/cnodejs">@cnodejs</a></li>
+        </ul>
+
+        <p>Copyright 2011 &copy cnodejs.org</p>
+    </div>
+
+  <script src="js/sh_main.js"></script>
+  <script src="js/sh_javascript.min.js"></script>
+  <script>highlight(undefined, undefined, 'pre');</script>
+</body>
+</html>

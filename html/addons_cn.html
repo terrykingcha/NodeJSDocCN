@@ -1,0 +1,689 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>C/C++ 扩展 Node.js v0.6.11 中文手册和文档</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/sh.css">
+  <link rel="canonical" href="http://nodejs.org/api/addons_cn.html">
+</head>
+<body class="alt apidoc" id="api-section-addons_cn">
+    <div id="intro" class="interior">
+        <a href="/" title="Go back to the home page">
+            <img id="logo" src="http://nodejs.org/images/logo-light.png" alt="node.js">
+        </a>
+    </div>
+    <div id="content" class="clearfix">
+        <div id="column2" class="interior">
+            <ul>
+                <li><a href="http://www.cnodejs.org" class="home">NodeJS中文社区</a></li>
+                <li><a href="http://www.nodejs.org/#download" class="download"  target="_blank">NodeJS下载</a></li>
+                <li><a href="http://cnodejs.org/tag/%E7%A4%BE%E5%8C%BA%E6%B4%BB%E5%8A%A8" class="community">社区活动</a></li>
+                <li><a href="#" class="docs current">API文档</a></li>                
+                <li><a href="http://nodejob.cnodejs.net/" class="jobs">工作机会</a></li>
+                <li><a href="http://cnodejs.org/about" class="about">关于我们</a></li>
+                <li><a href="http://www.nodejs.org" class="home">NodeJS官网</a></li>
+                <li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
+            </ul>
+            <p class="twitter"><a href="http://weibo.com/cnodejs">@cnodejs</a></p>
+        </div>
+
+        <div id="column1" class="interior">
+          <header>
+            <h1>Node.js v0.6.11 中文手册和文档</h1>
+            <div id="gtoc">
+              <p><a href="index_cn.html" name="toc">索引</a></p>
+            </div>
+            <hr>
+          </header>
+
+          <div id="toc">
+            <h2>目录</h2>
+            <ul>
+<li><a href="#addons_cn_c_c">C/C++ 扩展</a><ul>
+<li><a href="#addons_cn_addon_patterns">Addon patterns</a><ul>
+<li><a href="#addons_cn_function_arguments">Function arguments</a></li>
+<li><a href="#addons_cn_callbacks">Callbacks</a></li>
+<li><a href="#addons_cn_object_factory">Object factory</a></li>
+<li><a href="#addons_cn_function_factory">Function factory</a></li>
+<li><a href="#addons_cn_wrapping_c_objects">Wrapping C++ objects</a></li>
+<li><a href="#addons_cn_factory_of_wrapped_objects">Factory of wrapped objects</a></li>
+<li><a href="#addons_cn_passing_wrapped_objects_around">Passing wrapped objects around</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+
+          <div id="apicontent">
+            <h1>C/C++ 扩展<span><a class="mark" href="#addons_cn_c_c" id="addons_cn_c_c">#</a></span></h1>
+<p>扩展即是动态链接共享对象。它们提供了使用C和C++库的能力。目前来说，这些API因为涉及到很多库的知识，
+所以比较复杂。
+
+</p>
+<ul>
+<li><p>V8 Javascript，一个C++库。用于配合JavaScript工作（译者注：即运行JavaSript）：
+创建对象，调用函数等。大部分代码位于<code>v8.h</code>的头文件中（在Node源代码中的路径是<code>deps/v8/include/v8.h</code>）,
+也可以在线阅览文档(<a href="http://izs.me/v8-docs/main.html)。">http://izs.me/v8-docs/main.html)。</a></p>
+</li>
+<li><p><a href="https://github.com/joyent/libuv">libuv</a>，C的事件循环库。每当需要等待文件描述符（file descriptor）可读，
+或等待待定时器，抑或等待接受一个信号，都需要用到libuv的接口。也就是说，只要执行了I/O操作，就会用到libuv。</p>
+</li>
+<li><p>内部Node库。其中最重要的就是被广泛派生的<code>node::ObjectWrap</code>基类。</p>
+</li>
+<li><p>其它库，请参见<code>deps/</code>目录。</p>
+</li>
+</ul>
+<p>Node将其所有依赖库静态编译成可执行文件。当编译模块时，不需要担心和这些库的链接问题。
+
+</p>
+<p>接下来就实现一个和下面JavaScript代码等效的C++扩展：
+
+</p>
+<pre><code>exports.hello = function() { return &apos;world&apos;; };</code></pre>
+<p>首先，创建一个<code>hello.cc</code>文件：
+
+</p>
+<pre><code>#include &lt;node.h&gt;
+#include &lt;v8.h&gt;
+
+using namespace v8;
+
+Handle&lt;Value&gt; Method(const Arguments&amp; args) {
+  HandleScope scope;
+  return scope.Close(String::New(&quot;world&quot;));
+}
+
+void init(Handle&lt;Object&gt; target) {
+  target-&gt;Set(String::NewSymbol(&quot;hello&quot;),
+      FunctionTemplate::New(Method)-&gt;GetFunction());
+}
+NODE_MODULE(hello, init)</code></pre>
+<p>注意，所有Node扩展都必须导出一个初始化函数：
+
+</p>
+<pre><code>void Initialize (Handle&lt;Object&gt; target);
+NODE_MODULE(module_name, Initialize)</code></pre>
+<p>这里的<code>NODE_MODULE</code>后面并没有分号，是因为它并不是一个函数（见<code>node.h</code>）。
+
+</p>
+<p>此<code>module_name</code>必须匹配最终的二进制文件名（除去.node这个后缀）。
+
+</p>
+<p>源代码需要编译成<code>hello.node</code>，也就是二进制扩展。为此，用python创建一个名为<code>wscript</code>的文件，如下：
+
+</p>
+<pre><code>srcdir = &apos;.&apos;
+blddir = &apos;build&apos;
+VERSION = &apos;0.0.1&apos;
+
+def set_options(opt):
+  opt.tool_options(&apos;compiler_cxx&apos;)
+
+def configure(conf):
+  conf.check_tool(&apos;compiler_cxx&apos;)
+  conf.check_tool(&apos;node_addon&apos;)
+
+def build(bld):
+  obj = bld.new_task_gen(&apos;cxx&apos;, &apos;shlib&apos;, &apos;node_addon&apos;)
+  obj.target = &apos;hello&apos;
+  obj.source = &apos;hello.cc&apos;</code></pre>
+<p>运行<code>node-waf configure build</code>就可以创建这个扩展文件<code>build/default/hello.node</code>。
+
+</p>
+<p><code>node-waf</code>即<a href="http://code.google.com/p/waf">WAF</a>，它是基于python的编译系统。<code>node-waf</code>对于使用者来说非常方便。
+
+</p>
+<p>现在，只要通过<code>require</code>来访问刚刚编译好的模块，就可以在Node项目<code>hello.js</code>中使用这个二进制扩展。
+
+</p>
+<pre><code>var addon = require(&apos;./build/Release/hello&apos;);
+
+console.log(addon.hello()); // &apos;world&apos;</code></pre>
+<p>要获取更多信息，请参见本文下面的扩展模式（译者注：保留英文原文），或访问<a href="https://github.com/pietern/hiredis-node">https://github.com/pietern/hiredis-node</a> 参考产品中的一个例子。
+
+</p>
+<h2>Addon patterns<span><a class="mark" href="#addons_cn_addon_patterns" id="addons_cn_addon_patterns">#</a></span></h2>
+<p>Below are some addon patterns to help you get started. Consult the online
+<a href="http://izs.me/v8-docs/main.html">v8 reference</a> for help with the various v8
+calls, and v8&apos;s <a href="http://code.google.com/apis/v8/embed.html">Embedder&apos;s Guide</a>
+for an explanation of several concepts used such as handles, scopes,
+function templates, etc.
+
+</p>
+<p>To compile these examples, create the <code>wscript</code> file below and run
+<code>node-waf configure build</code>:
+
+</p>
+<pre><code>srcdir = &apos;.&apos;
+blddir = &apos;build&apos;
+VERSION = &apos;0.0.1&apos;
+
+def set_options(opt):
+  opt.tool_options(&apos;compiler_cxx&apos;)
+
+def configure(conf):
+  conf.check_tool(&apos;compiler_cxx&apos;)
+  conf.check_tool(&apos;node_addon&apos;)
+
+def build(bld):
+  obj = bld.new_task_gen(&apos;cxx&apos;, &apos;shlib&apos;, &apos;node_addon&apos;)
+  obj.target = &apos;addon&apos;
+  obj.source = [&apos;addon.cc&apos;]</code></pre>
+<p>In cases where there is more than one <code>.cc</code> file, simply add the file name to the
+<code>obj.source</code> array, e.g.:
+
+</p>
+<pre><code>obj.source = [&apos;addon.cc&apos;, &apos;myexample.cc&apos;]</code></pre>
+<h3>Function arguments<span><a class="mark" href="#addons_cn_function_arguments" id="addons_cn_function_arguments">#</a></span></h3>
+<p>The following pattern illustrates how to read arguments from JavaScript
+function calls and return a result. This is the main and only needed source
+<code>addon.cc</code>:
+
+</p>
+<pre><code>#define BUILDING_NODE_EXTENSION
+#include &lt;node.h&gt;
+
+using namespace v8;
+
+Handle&lt;Value&gt; Add(const Arguments&amp; args) {
+  HandleScope scope;
+
+  if (args.Length() &lt; 2) {
+    ThrowException(Exception::TypeError(String::New(&quot;Wrong number of arguments&quot;)));
+    return scope.Close(Undefined());
+  }
+
+  if (!args[0]-&gt;IsNumber() || !args[1]-&gt;IsNumber()) {
+    ThrowException(Exception::TypeError(String::New(&quot;Wrong arguments&quot;)));
+    return scope.Close(Undefined());
+  }
+
+  Local&lt;Number&gt; num = Number::New(args[0]-&gt;NumberValue() +
+      args[1]-&gt;NumberValue());
+  return scope.Close(num);
+}
+
+void Init(Handle&lt;Object&gt; target) {
+  target-&gt;Set(String::NewSymbol(&quot;add&quot;),
+      FunctionTemplate::New(Add)-&gt;GetFunction());
+}
+
+NODE_MODULE(addon, Init)</code></pre>
+<p>You can test it with the following JavaScript snippet:
+
+</p>
+<pre><code>var addon = require(&apos;./build/Release/addon&apos;);
+
+console.log( &apos;This should be eight:&apos;, addon.add(3,5) );</code></pre>
+<h3>Callbacks<span><a class="mark" href="#addons_cn_callbacks" id="addons_cn_callbacks">#</a></span></h3>
+<p>You can pass JavaScript functions to a C++ function and execute them from
+there. Here&apos;s <code>addon.cc</code>:
+
+</p>
+<pre><code>#define BUILDING_NODE_EXTENSION
+#include &lt;node.h&gt;
+
+using namespace v8;
+
+Handle&lt;Value&gt; RunCallback(const Arguments&amp; args) {
+  HandleScope scope;
+
+  Local&lt;Function&gt; cb = Local&lt;Function&gt;::Cast(args[0]);
+  const unsigned argc = 1;
+  Local&lt;Value&gt; argv[argc] = { Local&lt;Value&gt;::New(String::New(&quot;hello world&quot;)) };
+  cb-&gt;Call(Context::GetCurrent()-&gt;Global(), argc, argv);
+
+  return scope.Close(Undefined());
+}
+
+void Init(Handle&lt;Object&gt; target) {
+  target-&gt;Set(String::NewSymbol(&quot;runCallback&quot;),
+      FunctionTemplate::New(RunCallback)-&gt;GetFunction());
+}
+
+NODE_MODULE(addon, Init)</code></pre>
+<p>To test it run the following JavaScript snippet:
+
+</p>
+<pre><code>var addon = require(&apos;./build/Release/addon&apos;);
+
+addon.runCallback(function(msg){
+  console.log(msg); // &apos;hello world&apos;
+});</code></pre>
+<h3>Object factory<span><a class="mark" href="#addons_cn_object_factory" id="addons_cn_object_factory">#</a></span></h3>
+<p>You can create and return new objects from within a C++ function with this
+<code>addon.cc</code> pattern, which returns an object with property <code>msg</code> that echoes
+the string passed to <code>createObject()</code>:
+
+</p>
+<pre><code>#define BUILDING_NODE_EXTENSION
+#include &lt;node.h&gt;
+
+using namespace v8;
+
+Handle&lt;Value&gt; CreateObject(const Arguments&amp; args) {
+  HandleScope scope;
+
+  Local&lt;Object&gt; obj = Object::New();
+  obj-&gt;Set(String::NewSymbol(&quot;msg&quot;), args[0]-&gt;ToString());
+
+  return scope.Close(obj);
+}
+
+void Init(Handle&lt;Object&gt; target) {
+  target-&gt;Set(String::NewSymbol(&quot;createObject&quot;),
+      FunctionTemplate::New(CreateObject)-&gt;GetFunction());
+}
+
+NODE_MODULE(addon, Init)</code></pre>
+<p>To test it in JavaScript:
+
+</p>
+<pre><code>var addon = require(&apos;./build/Release/addon&apos;);
+
+var obj1 = addon.createObject(&apos;hello&apos;);
+var obj2 = addon.createObject(&apos;world&apos;);
+console.log(obj1.msg+&apos; &apos;+obj2.msg); // &apos;hello world&apos;</code></pre>
+<h3>Function factory<span><a class="mark" href="#addons_cn_function_factory" id="addons_cn_function_factory">#</a></span></h3>
+<p>This pattern illustrates how to create and return a JavaScript function that
+wraps a C++ function:
+
+</p>
+<pre><code>#define BUILDING_NODE_EXTENSION
+#include &lt;node.h&gt;
+
+using namespace v8;
+
+Handle&lt;Value&gt; MyFunction(const Arguments&amp; args) {
+  HandleScope scope;
+  return scope.Close(String::New(&quot;hello world&quot;));
+}
+
+Handle&lt;Value&gt; CreateFunction(const Arguments&amp; args) {
+  HandleScope scope;
+
+  Local&lt;FunctionTemplate&gt; tpl = FunctionTemplate::New(MyFunction);
+  Local&lt;Function&gt; fn = tpl-&gt;GetFunction();
+  fn-&gt;SetName(String::NewSymbol(&quot;theFunction&quot;)); // omit this to make it anonymous
+
+  return scope.Close(fn);
+}
+
+void Init(Handle&lt;Object&gt; target) {
+  target-&gt;Set(String::NewSymbol(&quot;createFunction&quot;),
+      FunctionTemplate::New(CreateFunction)-&gt;GetFunction());
+}
+
+NODE_MODULE(addon, Init)</code></pre>
+<p>To test:
+
+</p>
+<pre><code>var addon = require(&apos;./build/Release/addon&apos;);
+
+var fn = addon.createFunction();
+console.log(fn()); // &apos;hello world&apos;</code></pre>
+<h3>Wrapping C++ objects<span><a class="mark" href="#addons_cn_wrapping_c_objects" id="addons_cn_wrapping_c_objects">#</a></span></h3>
+<p>Here we will create a wrapper for a C++ object/class <code>MyObject</code> that can be
+instantiated in JavaScript through the <code>new</code> operator. First prepare the main
+module <code>addon.cc</code>:
+
+</p>
+<pre><code>#define BUILDING_NODE_EXTENSION
+#include &lt;node.h&gt;
+#include &quot;myobject.h&quot;
+
+using namespace v8;
+
+void InitAll(Handle&lt;Object&gt; target) {
+  MyObject::Init(target);
+}
+
+NODE_MODULE(addon, InitAll)</code></pre>
+<p>Then in <code>myobject.h</code> make your wrapper inherit from <code>node::ObjectWrap</code>:
+
+</p>
+<pre><code>#ifndef MYOBJECT_H
+#define MYOBJECT_H
+
+#include &lt;node.h&gt;
+
+class MyObject : public node::ObjectWrap {
+ public:
+  static void Init(v8::Handle&lt;v8::Object&gt; target);
+
+ private:
+  MyObject();
+  ~MyObject();
+
+  static v8::Handle&lt;v8::Value&gt; New(const v8::Arguments&amp; args);
+  static v8::Handle&lt;v8::Value&gt; PlusOne(const v8::Arguments&amp; args);
+  double counter_;
+};
+
+#endif</code></pre>
+<p>And in <code>myobject.cc</code> implement the various methods that you want to expose.
+Here we expose the method <code>plusOne</code> by adding it to the constructor&apos;s
+prototype:
+
+</p>
+<pre><code>#define BUILDING_NODE_EXTENSION
+#include &lt;node.h&gt;
+#include &quot;myobject.h&quot;
+
+using namespace v8;
+
+MyObject::MyObject() {};
+MyObject::~MyObject() {};
+
+void MyObject::Init(Handle&lt;Object&gt; target) {
+  // Prepare constructor template
+  Local&lt;FunctionTemplate&gt; tpl = FunctionTemplate::New(New);
+  tpl-&gt;SetClassName(String::NewSymbol(&quot;MyObject&quot;));
+  tpl-&gt;InstanceTemplate()-&gt;SetInternalFieldCount(1);
+  // Prototype
+  tpl-&gt;PrototypeTemplate()-&gt;Set(String::NewSymbol(&quot;plusOne&quot;),
+      FunctionTemplate::New(PlusOne)-&gt;GetFunction());
+
+  Persistent&lt;Function&gt; constructor = Persistent&lt;Function&gt;::New(tpl-&gt;GetFunction());
+  target-&gt;Set(String::NewSymbol(&quot;MyObject&quot;), constructor);
+}
+
+Handle&lt;Value&gt; MyObject::New(const Arguments&amp; args) {
+  HandleScope scope;
+
+  MyObject* obj = new MyObject();
+  obj-&gt;counter_ = args[0]-&gt;IsUndefined() ? 0 : args[0]-&gt;NumberValue();
+  obj-&gt;Wrap(args.This());
+
+  return args.This();
+}
+
+Handle&lt;Value&gt; MyObject::PlusOne(const Arguments&amp; args) {
+  HandleScope scope;
+
+  MyObject* obj = ObjectWrap::Unwrap&lt;MyObject&gt;(args.This());
+  obj-&gt;counter_ += 1;
+
+  return scope.Close(Number::New(obj-&gt;counter_));
+}</code></pre>
+<p>Test it with:
+
+</p>
+<pre><code>var addon = require(&apos;./build/Release/addon&apos;);
+
+var obj = new addon.MyObject(10);
+console.log( obj.plusOne() ); // 11
+console.log( obj.plusOne() ); // 12
+console.log( obj.plusOne() ); // 13</code></pre>
+<h3>Factory of wrapped objects<span><a class="mark" href="#addons_cn_factory_of_wrapped_objects" id="addons_cn_factory_of_wrapped_objects">#</a></span></h3>
+<p>This is useful when you want to be able to create native objects without
+explicitly instantiating them with the <code>new</code> operator in JavaScript, e.g.
+
+</p>
+<pre><code>var obj = addon.createObject();
+// instead of:
+// var obj = new addon.Object();</code></pre>
+<p>Let&apos;s register our <code>createObject</code> method in <code>addon.cc</code>:
+
+</p>
+<pre><code>#define BUILDING_NODE_EXTENSION
+#include &lt;node.h&gt;
+#include &quot;myobject.h&quot;
+
+using namespace v8;
+
+Handle&lt;Value&gt; CreateObject(const Arguments&amp; args) {
+  HandleScope scope;
+  return scope.Close(MyObject::NewInstance(args));
+}
+
+void InitAll(Handle&lt;Object&gt; target) {
+  MyObject::Init();
+
+  target-&gt;Set(String::NewSymbol(&quot;createObject&quot;),
+      FunctionTemplate::New(CreateObject)-&gt;GetFunction());
+}
+
+NODE_MODULE(addon, InitAll)</code></pre>
+<p>In <code>myobject.h</code> we now introduce the static method <code>NewInstance</code> that takes
+care of instantiating the object (i.e. it does the job of <code>new</code> in JavaScript):
+
+</p>
+<pre><code>#define BUILDING_NODE_EXTENSION
+#ifndef MYOBJECT_H
+#define MYOBJECT_H
+
+#include &lt;node.h&gt;
+
+class MyObject : public node::ObjectWrap {
+ public:
+  static void Init();
+  static v8::Handle&lt;v8::Value&gt; NewInstance(const v8::Arguments&amp; args);
+
+ private:
+  MyObject();
+  ~MyObject();
+
+  static v8::Persistent&lt;v8::Function&gt; constructor;
+  static v8::Handle&lt;v8::Value&gt; New(const v8::Arguments&amp; args);
+  static v8::Handle&lt;v8::Value&gt; PlusOne(const v8::Arguments&amp; args);
+  double counter_;
+};
+
+#endif</code></pre>
+<p>The implementation is similar to the above in <code>myobject.cc</code>:
+
+</p>
+<pre><code>#define BUILDING_NODE_EXTENSION
+#include &lt;node.h&gt;
+#include &quot;myobject.h&quot;
+
+using namespace v8;
+
+MyObject::MyObject() {};
+MyObject::~MyObject() {};
+
+Persistent&lt;Function&gt; MyObject::constructor;
+
+void MyObject::Init() {
+  // Prepare constructor template
+  Local&lt;FunctionTemplate&gt; tpl = FunctionTemplate::New(New);
+  tpl-&gt;SetClassName(String::NewSymbol(&quot;MyObject&quot;));
+  tpl-&gt;InstanceTemplate()-&gt;SetInternalFieldCount(1);
+  // Prototype
+  tpl-&gt;PrototypeTemplate()-&gt;Set(String::NewSymbol(&quot;plusOne&quot;),
+      FunctionTemplate::New(PlusOne)-&gt;GetFunction());
+
+  constructor = Persistent&lt;Function&gt;::New(tpl-&gt;GetFunction());
+}
+
+Handle&lt;Value&gt; MyObject::New(const Arguments&amp; args) {
+  HandleScope scope;
+
+  MyObject* obj = new MyObject();
+  obj-&gt;counter_ = args[0]-&gt;IsUndefined() ? 0 : args[0]-&gt;NumberValue();
+  obj-&gt;Wrap(args.This());
+
+  return args.This();
+}
+
+Handle&lt;Value&gt; MyObject::NewInstance(const Arguments&amp; args) {
+  HandleScope scope;
+
+  const unsigned argc = 1;
+  Handle&lt;Value&gt; argv[argc] = { args[0] };
+  Local&lt;Object&gt; instance = constructor-&gt;NewInstance(argc, argv);
+
+  return scope.Close(instance);
+}
+
+Handle&lt;Value&gt; MyObject::PlusOne(const Arguments&amp; args) {
+  HandleScope scope;
+
+  MyObject* obj = ObjectWrap::Unwrap&lt;MyObject&gt;(args.This());
+  obj-&gt;counter_ += 1;
+
+  return scope.Close(Number::New(obj-&gt;counter_));
+}</code></pre>
+<p>Test it with:
+
+</p>
+<pre><code>var addon = require(&apos;./build/Release/addon&apos;);
+
+var obj = addon.createObject(10);
+console.log( obj.plusOne() ); // 11
+console.log( obj.plusOne() ); // 12
+console.log( obj.plusOne() ); // 13
+
+var obj2 = addon.createObject(20);
+console.log( obj2.plusOne() ); // 21
+console.log( obj2.plusOne() ); // 22
+console.log( obj2.plusOne() ); // 23</code></pre>
+<h3>Passing wrapped objects around<span><a class="mark" href="#addons_cn_passing_wrapped_objects_around" id="addons_cn_passing_wrapped_objects_around">#</a></span></h3>
+<p>In addition to wrapping and returning C++ objects, you can pass them around
+by unwrapping them with Node&apos;s <code>node::ObjectWrap::Unwrap</code> helper function.
+In the following <code>addon.cc</code> we introduce a function <code>add()</code> that can take on two
+<code>MyObject</code> objects:
+
+</p>
+<pre><code>#define BUILDING_NODE_EXTENSION
+#include &lt;node.h&gt;
+#include &quot;myobject.h&quot;
+
+using namespace v8;
+
+Handle&lt;Value&gt; CreateObject(const Arguments&amp; args) {
+  HandleScope scope;
+  return scope.Close(MyObject::NewInstance(args));
+}
+
+Handle&lt;Value&gt; Add(const Arguments&amp; args) {
+  HandleScope scope;
+
+  MyObject* obj1 = node::ObjectWrap::Unwrap&lt;MyObject&gt;(
+      args[0]-&gt;ToObject());
+  MyObject* obj2 = node::ObjectWrap::Unwrap&lt;MyObject&gt;(
+      args[1]-&gt;ToObject());
+
+  double sum = obj1-&gt;Val() + obj2-&gt;Val();
+  return scope.Close(Number::New(sum));
+}
+
+void InitAll(Handle&lt;Object&gt; target) {
+  MyObject::Init();
+
+  target-&gt;Set(String::NewSymbol(&quot;createObject&quot;),
+      FunctionTemplate::New(CreateObject)-&gt;GetFunction());
+
+  target-&gt;Set(String::NewSymbol(&quot;add&quot;),
+      FunctionTemplate::New(Add)-&gt;GetFunction());
+}
+
+NODE_MODULE(addon, InitAll)</code></pre>
+<p>To make things interesting we introduce a public method in <code>myobject.h</code> so we
+can probe private values after unwrapping the object:
+
+</p>
+<pre><code>#define BUILDING_NODE_EXTENSION
+#ifndef MYOBJECT_H
+#define MYOBJECT_H
+
+#include &lt;node.h&gt;
+
+class MyObject : public node::ObjectWrap {
+ public:
+  static void Init();
+  static v8::Handle&lt;v8::Value&gt; NewInstance(const v8::Arguments&amp; args);
+  double Val() const { return val_; }
+
+ private:
+  MyObject();
+  ~MyObject();
+
+  static v8::Persistent&lt;v8::Function&gt; constructor;
+  static v8::Handle&lt;v8::Value&gt; New(const v8::Arguments&amp; args);
+  double val_;
+};
+
+#endif</code></pre>
+<p>The implementation of <code>myobject.cc</code> is similar as before:
+
+</p>
+<pre><code>#define BUILDING_NODE_EXTENSION
+#include &lt;node.h&gt;
+#include &quot;myobject.h&quot;
+
+using namespace v8;
+
+MyObject::MyObject() {};
+MyObject::~MyObject() {};
+
+Persistent&lt;Function&gt; MyObject::constructor;
+
+void MyObject::Init() {
+  // Prepare constructor template
+  Local&lt;FunctionTemplate&gt; tpl = FunctionTemplate::New(New);
+  tpl-&gt;SetClassName(String::NewSymbol(&quot;MyObject&quot;));
+  tpl-&gt;InstanceTemplate()-&gt;SetInternalFieldCount(1);
+
+  constructor = Persistent&lt;Function&gt;::New(tpl-&gt;GetFunction());
+}
+
+Handle&lt;Value&gt; MyObject::New(const Arguments&amp; args) {
+  HandleScope scope;
+
+  MyObject* obj = new MyObject();
+  obj-&gt;val_ = args[0]-&gt;IsUndefined() ? 0 : args[0]-&gt;NumberValue();
+  obj-&gt;Wrap(args.This());
+
+  return args.This();
+}
+
+Handle&lt;Value&gt; MyObject::NewInstance(const Arguments&amp; args) {
+  HandleScope scope;
+
+  const unsigned argc = 1;
+  Handle&lt;Value&gt; argv[argc] = { args[0] };
+  Local&lt;Object&gt; instance = constructor-&gt;NewInstance(argc, argv);
+
+  return scope.Close(instance);
+}</code></pre>
+<p>Test it with:
+
+</p>
+<pre><code>var addon = require(&apos;./build/Release/addon&apos;);
+
+var obj1 = addon.createObject(10);
+var obj2 = addon.createObject(20);
+var result = addon.add(obj1, obj2);
+
+console.log(result); // 30</code></pre>
+
+          </div>
+        </div>
+    </div>
+    <div id="footer">
+        <ul class="clearfix">
+		
+		<li><a href="http://www.cnodejs.org" class="home">NodeJS中文社区</a></li>
+		<li><a href="http://www.nodejs.org/#download" class="download" target="_blank">NodeJS下载</a></li>
+		<li><a href="http://cnodejs.org/tag/%E7%A4%BE%E5%8C%BA%E6%B4%BB%E5%8A%A8" class="community">社区活动</a></li>
+		<li><a href="#" class="docs current">API文档</a></li>                
+		<li><a href="http://nodejob.cnodejs.net/" class="jobs">工作机会</a></li>
+		<li><a href="http://cnodejs.org/about" class="about">关于我们</a></li>
+		<li><a href="http://www.nodejs.org" class="home">NodeJS官网</a></li>
+		<li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
+             <li><a href="http://weibo.com/cnodejs">@cnodejs</a></li>
+        </ul>
+
+        <p>Copyright 2011 &copy cnodejs.org</p>
+    </div>
+
+  <script src="js/sh_main.js"></script>
+  <script src="js/sh_javascript.min.js"></script>
+  <script>highlight(undefined, undefined, 'pre');</script>
+</body>
+</html>

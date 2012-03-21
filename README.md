@@ -4,6 +4,11 @@
  - Commit hash: 7343f8e776146bf4461348a9130f2c5040a0dfa0
  - Date: 2012/2/10 13:58:58
 
+# 最近更新
+
+> 完成流接口文档的翻译
+> 增加文档生成工具（tools/doc）。在原有工具上做了一些改动，包括模板和generate.js。
+
 # 中文目录和翻译进度
 
 * [摘要](./NodeJSDocCN/blob/master/api/synopsis_cn.markdown)

@@ -1,0 +1,754 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>缓冲器类 Node.js v0.6.11 中文手册和文档</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/sh.css">
+  <link rel="canonical" href="http://nodejs.org/api/buffer_cn.html">
+</head>
+<body class="alt apidoc" id="api-section-buffer_cn">
+    <div id="intro" class="interior">
+        <a href="/" title="Go back to the home page">
+            <img id="logo" src="http://nodejs.org/images/logo-light.png" alt="node.js">
+        </a>
+    </div>
+    <div id="content" class="clearfix">
+        <div id="column2" class="interior">
+            <ul>
+                <li><a href="http://www.cnodejs.org" class="home">NodeJS中文社区</a></li>
+                <li><a href="http://www.nodejs.org/#download" class="download"  target="_blank">NodeJS下载</a></li>
+                <li><a href="http://cnodejs.org/tag/%E7%A4%BE%E5%8C%BA%E6%B4%BB%E5%8A%A8" class="community">社区活动</a></li>
+                <li><a href="#" class="docs current">API文档</a></li>                
+                <li><a href="http://nodejob.cnodejs.net/" class="jobs">工作机会</a></li>
+                <li><a href="http://cnodejs.org/about" class="about">关于我们</a></li>
+                <li><a href="http://www.nodejs.org" class="home">NodeJS官网</a></li>
+                <li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
+            </ul>
+            <p class="twitter"><a href="http://weibo.com/cnodejs">@cnodejs</a></p>
+        </div>
+
+        <div id="column1" class="interior">
+          <header>
+            <h1>Node.js v0.6.11 中文手册和文档</h1>
+            <div id="gtoc">
+              <p><a href="index_cn.html" name="toc">索引</a></p>
+            </div>
+            <hr>
+          </header>
+
+          <div id="toc">
+            <h2>目录</h2>
+            <ul>
+<li><a href="#buffer_cn">缓冲器类</a><ul>
+<li><a href="#buffer_cn_buffer">类： Buffer</a><ul>
+<li><a href="#buffer_cn_new_buffer_size">new Buffer(size)</a></li>
+<li><a href="#buffer_cn_new_buffer_array">new Buffer(array)</a></li>
+<li><a href="#buffer_cn_new_buffer_str_encoding">new Buffer(str, [encoding])</a></li>
+<li><a href="#buffer_cn_buf_write_string_offset_length_encoding">buf.write(string, [offset], [length], [encoding])</a></li>
+<li><a href="#buffer_cn_buf_tostring_encoding_start_end">buf.toString([encoding], [start], [end])</a></li>
+<li><a href="#buffer_cn_buf_index">buf[index]</a></li>
+<li><a href="#buffer_cn_buffer_isbuffer_obj">类方法：Buffer.isBuffer(obj)</a></li>
+<li><a href="#buffer_cn_buffer_bytelength_string_encoding">类方法：Buffer.byteLength(string, [encoding])</a></li>
+<li><a href="#buffer_cn_buf_length">buf.length</a></li>
+<li><a href="#buffer_cn_buf_copy_targetbuffer_targetstart_sourcestart_sourceend">buf.copy(targetBuffer, [targetStart], [sourceStart], [sourceEnd])</a></li>
+<li><a href="#buffer_cn_buf_slice_start_end">buf.slice([start], [end])</a></li>
+<li><a href="#buffer_cn_buf_readuint8_offset_noassert">buf.readUInt8(offset, [noAssert])</a></li>
+<li><a href="#buffer_cn_buf_readuint16le_offset_noassert">buf.readUInt16LE(offset, [noAssert])</a></li>
+<li><a href="#buffer_cn_buf_readuint16be_offset_noassert">buf.readUInt16BE(offset, [noAssert])</a></li>
+<li><a href="#buffer_cn_buf_readuint32le_offset_noassert">buf.readUInt32LE(offset, [noAssert])</a></li>
+<li><a href="#buffer_cn_buf_readuint32be_offset_noassert">buf.readUInt32BE(offset, [noAssert])</a></li>
+<li><a href="#buffer_cn_buf_readint8_offset_noassert">buf.readInt8(offset, [noAssert])</a></li>
+<li><a href="#buffer_cn_buf_readint16le_offset_noassert">buf.readInt16LE(offset, [noAssert])</a></li>
+<li><a href="#buffer_cn_buf_readint16be_offset_noassert">buf.readInt16BE(offset, [noAssert])</a></li>
+<li><a href="#buffer_cn_buf_readint32le_offset_noassert">buf.readInt32LE(offset, [noAssert])</a></li>
+<li><a href="#buffer_cn_buf_readint32be_offset_noassert">buf.readInt32BE(offset, [noAssert])</a></li>
+<li><a href="#buffer_cn_buf_readfloatle_offset_noassert">buf.readFloatLE(offset, [noAssert])</a></li>
+<li><a href="#buffer_cn_buf_readfloatbe_offset_noassert">buf.readFloatBE(offset, [noAssert])</a></li>
+<li><a href="#buffer_cn_buf_readdoublele_offset_noassert">buf.readDoubleLE(offset, [noAssert])</a></li>
+<li><a href="#buffer_cn_buf_readdoublebe_offset_noassert">buf.readDoubleBE(offset, [noAssert])</a></li>
+<li><a href="#buffer_cn_buf_writeuint8_value_offset_noassert">buf.writeUInt8(value, offset, [noAssert])</a></li>
+<li><a href="#buffer_cn_buf_writeuint16le_value_offset_noassert">buf.writeUInt16LE(value, offset, [noAssert])</a></li>
+<li><a href="#buffer_cn_buf_writeuint16be_value_offset_noassert">buf.writeUInt16BE(value, offset, [noAssert])</a></li>
+<li><a href="#buffer_cn_buf_writeuint32le_value_offset_noassert">buf.writeUInt32LE(value, offset, [noAssert])</a></li>
+<li><a href="#buffer_cn_buf_writeuint32be_value_offset_noassert">buf.writeUInt32BE(value, offset, [noAssert])</a></li>
+<li><a href="#buffer_cn_buf_writeint8_value_offset_noassert">buf.writeInt8(value, offset, [noAssert])</a></li>
+<li><a href="#buffer_cn_buf_writeint16le_value_offset_noassert">buf.writeInt16LE(value, offset, [noAssert])</a></li>
+<li><a href="#buffer_cn_buf_writeint16be_value_offset_noassert">buf.writeInt16BE(value, offset, [noAssert])</a></li>
+<li><a href="#buffer_cn_buf_writeint32le_value_offset_noassert">buf.writeInt32LE(value, offset, [noAssert])</a></li>
+<li><a href="#buffer_cn_buf_writeint32be_value_offset_noassert">buf.writeInt32BE(value, offset, [noAssert])</a></li>
+<li><a href="#buffer_cn_buf_writefloatle_value_offset_noassert">buf.writeFloatLE(value, offset, [noAssert])</a></li>
+<li><a href="#buffer_cn_buf_writefloatbe_value_offset_noassert">buf.writeFloatBE(value, offset, [noAssert])</a></li>
+<li><a href="#buffer_cn_buf_writedoublele_value_offset_noassert">buf.writeDoubleLE(value, offset, [noAssert])</a></li>
+<li><a href="#buffer_cn_buf_writedoublebe_value_offset_noassert">buf.writeDoubleBE(value, offset, [noAssert])</a></li>
+<li><a href="#buffer_cn_buf_fill_value_offset_end">buf.fill(value, [offset], [end])</a></li>
+</ul>
+</li>
+<li><a href="#buffer_cn_buffer_inspect_max_bytes">buffer.INSPECT_MAX_BYTES</a></li>
+<li><a href="#buffer_cn_slowbuffer">类：SlowBuffer</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+
+          <div id="apicontent">
+            <h1>缓冲器类<span><a class="mark" href="#buffer_cn" id="buffer_cn">#</a></span></h1>
+<p>纯粹的JavaScript语言对处理Unicode非常友好，但却对二进制数据束手无策。在处理TCP流或文件系统时，
+不得不操作字节流。Node拥有操作、创建以及消耗字节流等的一系列策略。
+
+</p>
+<p>原始数据储存在<code>缓冲器</code>类的实例中。<code>缓冲区</code>像是一个整型数组，只不过是在V8堆外分配的一个原始内存块。
+<code>缓冲区</code>是不能改变大小的。
+
+</p>
+<p><code>缓冲器</code>类是全局对象，必须使用<code>require(&apos;buffer&apos;)</code>的情况非常少见。
+
+</p>
+<p>在缓冲流和JavaScript字符串对象之间转换，需要显式提供编码方法。如下列举了不同的字符编码。
+
+</p>
+<ul>
+<li><p><code>&apos;ascii&apos;</code> - 仅用于7位的ASCII数据。这种编码方法非常快速，并且一旦设置便会抛弃高位数据。
+注意，这个编码方式会将空字符（<code>&apos;\0&apos;</code> 或 <code>&apos;\u0000&apos;</code>）转换成<code>0x20</code>（空格的字符编码）。
+如果想把空字符转换成<code>0x00</code>，得使用<code>&apos;utf8&apos;</code>。</p>
+</li>
+<li><p><code>&apos;utf8&apos;</code> - 多字节编码的Unicode字符。许多网页以及其它文档格式会使用UTF-8编码。</p>
+</li>
+<li><p><code>&apos;ucs2&apos;</code> - 仅用2个字节编码的Unicode字符。它仅可对BMP（基本多文种平面或第零平面，从U+0000到U+FFFF）进行编码。</p>
+</li>
+<li><p><code>&apos;base64&apos;</code> - Base64字符串编码。</p>
+</li>
+<li><p><code>&apos;binary&apos;</code> - 经使用每个字符的头8位把原始二进制数据编码成字符串的一种途径。这是一个已经被废弃的编码方法。
+且为了能让<code>缓冲器</code>对象取代这个编码方法，应避免使用它。在Node的未来版本中也会移除掉这个编码方法。</p>
+</li>
+<li><p><code>&apos;hex&apos;</code> - 把每个字节编码成两个十六进制字符。</p>
+</li>
+</ul>
+<h2>类： Buffer<span><a class="mark" href="#buffer_cn_buffer" id="buffer_cn_buffer">#</a></span></h2>
+<p>Buffer类是一个全局类型，可以直接处理二进制数据。它有多个构造函数。
+
+</p>
+<h3>new Buffer(size)<span><a class="mark" href="#buffer_cn_new_buffer_size" id="buffer_cn_new_buffer_size">#</a></span></h3>
+<div class="signature"><ul>
+<li><code>size</code> Number</li>
+</div></ul>
+<p>分配一个拥有<code>size</code>字节的新缓冲器。
+
+</p>
+<h3>new Buffer(array)<span><a class="mark" href="#buffer_cn_new_buffer_array" id="buffer_cn_new_buffer_array">#</a></span></h3>
+<div class="signature"><ul>
+<li><code>array</code> Array</li>
+</div></ul>
+<p>分配一个使用<code>array</code>字节序列的新缓冲器。
+
+</p>
+<h3>new Buffer(str, [encoding])<span><a class="mark" href="#buffer_cn_new_buffer_str_encoding" id="buffer_cn_new_buffer_str_encoding">#</a></span></h3>
+<div class="signature"><ul>
+<li><code>str</code> String - 需要编码的字符串</li>
+<li><code>encoding</code> String - 使用的编码方式，可选</li>
+</div></ul>
+<p>分配一个包含给定<code>str</code>的新缓冲器。<code>encoding</code>默认为<code>&apos;utf8&apos;</code>。
+
+</p>
+<h3>buf.write(string, [offset], [length], [encoding])<span><a class="mark" href="#buffer_cn_buf_write_string_offset_length_encoding" id="buffer_cn_buf_write_string_offset_length_encoding">#</a></span></h3>
+<div class="signature"><ul>
+<li><code>string</code> String - 写入缓冲区的字符串</li>
+<li><code>offset</code> Number，可选，默认为0</li>
+<li><code>length</code> Number，可选</li>
+<li><code>encoding</code> String，可选，默认为&apos;utf8&apos;</li>
+</div></ul>
+<p>用给定的编码在<code>offset</code>偏移处写入<code>string</code>到缓冲器中。<code>offset</code>默认为<code>0</code>，<code>encoding</code>默认为<code>&apos;utf-8&apos;</code>。
+<code>length</code>是需要写入的字节数。方法返回成功写入的字节数。如果<code>缓冲器</code>没有足够的空间来转载整个字符串，将会
+写入一个不完整的字符串。<code>length</code>默认为<code>buffer.length - offset</code>。这个方法不会写入不完整的字符。
+
+
+</p>
+<pre><code>buf = new Buffer(256);
+len = buf.write(&apos;\u00bd + \u00bc = \u00be&apos;, 0);
+console.log(len + &quot; bytes: &quot; + buf.toString(&apos;utf8&apos;, 0, len));</code></pre>
+<p><code>Buffer._charsWritten</code>会被设置为写入的字符数（有可能和写入的字节数不同）。
+且在下一次调用<code>buf.write()</code>时重新覆盖这个值。
+
+
+</p>
+<h3>buf.toString([encoding], [start], [end])<span><a class="mark" href="#buffer_cn_buf_tostring_encoding_start_end" id="buffer_cn_buf_tostring_encoding_start_end">#</a></span></h3>
+<div class="signature"><ul>
+<li><code>encoding</code> String，可选，默认为&apos;utf8&apos;</li>
+<li><code>start</code> Number，可选，默认为0</li>
+<li><code>end</code> Number，可选</li>
+</div></ul>
+<p>从<code>encoding</code>编码（默认为<code>&apos;utf8&apos;</code>）的缓冲器数据中，截取以<code>start</code>（默认为<code>0</code>）开始、
+<code>end</code>（默认为<code>buffer.length</code>）结束的数据，将其解码并返回一个字符串。
+
+</p>
+<p>见上面的<code>buffer.write()</code>示例
+
+
+</p>
+<h3>buf[index]<span><a class="mark" href="#buffer_cn_buf_index" id="buffer_cn_buf_index">#</a></span></h3>
+<!--type=property-->
+<!--name=[index]-->
+
+<p>获取和设置位于<code>index</code>的字节值。这个值指向单个字节，所以合法的范围是从<code>0x00</code>到<code>0xFF</code>或<code>0</code>到<code>255</code>。
+
+</p>
+<p>例如，复制一个ASCII字符串到缓冲器中，每次一个字节：
+
+</p>
+<pre><code>str = &quot;node.js&quot;;
+buf = new Buffer(str.length);
+
+for (var i = 0; i &lt; str.length ; i++) {
+  buf[i] = str.charCodeAt(i);
+}
+
+console.log(buf.toString()); //（译者注：原文这里有误，直接输出buf对象的结果应该是&quot;&lt;Buffer 6e 6f 64 65 2e 6a 73&gt;&quot;）。
+
+// node.js</code></pre>
+<h3>类方法：Buffer.isBuffer(obj)<span><a class="mark" href="#buffer_cn_buffer_isbuffer_obj" id="buffer_cn_buffer_isbuffer_obj">#</a></span></h3>
+<div class="signature"><ul>
+<li><code>obj</code> Object</li>
+<li>Return: Boolean</li>
+</div></ul>
+<p>验证<code>obj</code>是否是个<code>Buffer</code>实例。
+
+</p>
+<h3>类方法：Buffer.byteLength(string, [encoding])<span><a class="mark" href="#buffer_cn_buffer_bytelength_string_encoding" id="buffer_cn_buffer_bytelength_string_encoding">#</a></span></h3>
+<div class="signature"><ul>
+<li><code>string</code> String</li>
+<li><code>encoding</code> String，可选，默认为&apos;utf8&apos;</li>
+<li>Return: Number</li>
+</div></ul>
+<p>给出一个字符串确切字节长度。<code>encoding</code>默认为<code>&apos;utf8&apos;</code>。因为<code>Strting.prototype.length</code>返回的是
+一个字符串的<em>字符</em>个数，所以这两者是有区别的。
+
+</p>
+<p>示例：
+
+</p>
+<pre><code>str = &apos;\u00bd + \u00bc = \u00be&apos;;
+
+console.log(str + &quot;: &quot; + str.length + &quot; characters, &quot; +
+  Buffer.byteLength(str, &apos;utf8&apos;) + &quot; bytes&quot;);
+
+// ½ + ¼ = ¾: 9 characters, 12 bytes</code></pre>
+<h3>buf.length<span><a class="mark" href="#buffer_cn_buf_length" id="buffer_cn_buf_length">#</a></span></h3>
+<div class="signature"><ul>
+<li>Number</li>
+</div></ul>
+<p>缓冲器的字节大小。注意，这并非是内容所占的大小。<code>length</code>是指缓冲器对象的预分配内存大小。
+它不会随着内容的改变而改变。
+
+
+</p>
+<pre><code>buf = new Buffer(1234);
+
+console.log(buf.length);
+buf.write(&quot;some string&quot;, &quot;ascii&quot;, 0);
+console.log(buf.length);
+
+// 1234
+// 1234</code></pre>
+<h3>buf.copy(targetBuffer, [targetStart], [sourceStart], [sourceEnd])<span><a class="mark" href="#buffer_cn_buf_copy_targetbuffer_targetstart_sourcestart_sourceend" id="buffer_cn_buf_copy_targetbuffer_targetstart_sourcestart_sourceend">#</a></span></h3>
+<div class="signature"><ul>
+<li><code>targetBuffer</code> Buffer object - 做为复制目标的缓冲器</li>
+<li><code>targetStart</code> Number，可选，默认为0</li>
+<li><code>sourceStart</code> Number，可选，默认为0</li>
+<li><code>sourceEnd</code> Number，可选，默认为0</li>
+</div></ul>
+<p>在缓冲器之间进行复制。源和目标的区间是可以重叠的。<code>targetStart</code>和<code>sourceStart</code>默认为<code>0</code>。
+<code>sourceEnd</code>默认为<code>buffer.length</code>。
+
+</p>
+<p>示例：构建两个缓冲器，然后把<code>buf1</code>从第16到第19个字节复制到第8个字节开始的<code>buf2</code>中。
+
+</p>
+<pre><code>buf1 = new Buffer(26);
+buf2 = new Buffer(26);
+
+for (var i = 0 ; i &lt; 26 ; i++) {
+  buf1[i] = i + 97; // 97 is ASCII a
+  buf2[i] = 33; // ASCII !
+}
+
+buf1.copy(buf2, 8, 16, 20);
+console.log(buf2.toString(&apos;ascii&apos;, 0, 25));
+
+// !!!!!!!!qrst!!!!!!!!!!!!!</code></pre>
+<h3>buf.slice([start], [end])<span><a class="mark" href="#buffer_cn_buf_slice_start_end" id="buffer_cn_buf_slice_start_end">#</a></span></h3>
+<div class="signature"><ul>
+<li><code>start</code> Number，可选，默认为0</li>
+<li><code>end</code> Number，可选，默认为0</li>
+</div></ul>
+<p>返回一个新缓冲器，它引用的内存就是原缓冲器从<code>start</code>（默认为<code>0</code>）到<code>end</code>（默认为<code>buffer.length</code>）的索引区间。
+
+</p>
+<p><strong>改变新缓冲器片段同样会改变原缓冲器中相对应的那块内存！</strong>
+
+</p>
+<p>示例：用ASCII字母表构建一个缓冲器，获取一个新缓冲器片段，然后改变原缓冲器的一个字节。
+
+</p>
+<pre><code>var buf1 = new Buffer(26);
+
+for (var i = 0 ; i &lt; 26 ; i++) {
+  buf1[i] = i + 97; // 97 is ASCII a
+}
+
+var buf2 = buf1.slice(0, 3);
+console.log(buf2.toString(&apos;ascii&apos;, 0, buf2.length));
+buf1[0] = 33;
+console.log(buf2.toString(&apos;ascii&apos;, 0, buf2.length));
+
+// abc
+// !bc</code></pre>
+<h3>buf.readUInt8(offset, [noAssert])<span><a class="mark" href="#buffer_cn_buf_readuint8_offset_noassert" id="buffer_cn_buf_readuint8_offset_noassert">#</a></span></h3>
+<div class="signature"><ul>
+<li><code>offset</code> Number</li>
+<li><code>noAssert</code> Boolean，可选，默认为false</li>
+<li>Return: Number</li>
+</div></ul>
+<p>从缓冲器的指定偏移处读取一个无符号8位整型。
+
+</p>
+<p>把<code>noAssert</code>设置为true，就会略过对<code>offset</code>的验证。也就说<code>offset</code>可以超出缓冲器的末尾。默认为<code>false</code>。
+
+</p>
+<p>示例：
+
+</p>
+<pre><code>var buf = new Buffer(4);
+
+buf[0] = 0x3;
+buf[1] = 0x4;
+buf[2] = 0x23;
+buf[3] = 0x42;
+
+for (ii = 0; ii &lt; buf.length; ii++) {
+  console.log(buf.readUInt8(ii));
+}
+
+// 0x3
+// 0x4
+// 0x23
+// 0x42</code></pre>
+<h3>buf.readUInt16LE(offset, [noAssert])<span><a class="mark" href="#buffer_cn_buf_readuint16le_offset_noassert" id="buffer_cn_buf_readuint16le_offset_noassert">#</a></span></h3>
+<h3>buf.readUInt16BE(offset, [noAssert])<span><a class="mark" href="#buffer_cn_buf_readuint16be_offset_noassert" id="buffer_cn_buf_readuint16be_offset_noassert">#</a></span></h3>
+<ul>
+<li><code>offset</code> Number</li>
+<li><code>noAssert</code> Boolean，可选，默认为false</li>
+<li>Return: Number</li>
+</ul>
+<p>以不同的字节顺序从缓冲器的指定偏移处读取一个无符号16位整型。
+
+</p>
+<p>把<code>noAssert</code>设置为true，就会略过对<code>offset</code>的验证。也就说<code>offset</code>可以超出缓冲器的末尾。默认为<code>false</code>。
+
+</p>
+<p>示例：
+
+</p>
+<pre><code>var buf = new Buffer(4);
+
+buf[0] = 0x3;
+buf[1] = 0x4;
+buf[2] = 0x23;
+buf[3] = 0x42;
+
+console.log(buf.readUInt16BE(0));
+console.log(buf.readUInt16LE(0));
+console.log(buf.readUInt16BE(1));
+console.log(buf.readUInt16LE(1));
+console.log(buf.readUInt16BE(2));
+console.log(buf.readUInt16LE(2));
+
+// 0x0304
+// 0x0403
+// 0x0423
+// 0x2304
+// 0x2342
+// 0x4223</code></pre>
+<h3>buf.readUInt32LE(offset, [noAssert])<span><a class="mark" href="#buffer_cn_buf_readuint32le_offset_noassert" id="buffer_cn_buf_readuint32le_offset_noassert">#</a></span></h3>
+<h3>buf.readUInt32BE(offset, [noAssert])<span><a class="mark" href="#buffer_cn_buf_readuint32be_offset_noassert" id="buffer_cn_buf_readuint32be_offset_noassert">#</a></span></h3>
+<ul>
+<li><code>offset</code> Number</li>
+<li><code>noAssert</code> Boolean，可选，默认为false</li>
+<li>Return: Number</li>
+</ul>
+<p>以不同的字节顺序从缓冲器的指定偏移处读取一个无符号32位整型。
+
+</p>
+<p>把<code>noAssert</code>设置为true，就会略过对<code>offset</code>的验证。也就说<code>offset</code>可以超出缓冲器的末尾。默认为<code>false</code>。
+
+</p>
+<p>示例：
+
+</p>
+<pre><code>var buf = new Buffer(4);
+
+buf[0] = 0x3;
+buf[1] = 0x4;
+buf[2] = 0x23;
+buf[3] = 0x42;
+
+console.log(buf.readUInt32BE(0));
+console.log(buf.readUInt32LE(0));
+
+// 0x03042342
+// 0x42230403</code></pre>
+<h3>buf.readInt8(offset, [noAssert])<span><a class="mark" href="#buffer_cn_buf_readint8_offset_noassert" id="buffer_cn_buf_readint8_offset_noassert">#</a></span></h3>
+<div class="signature"><ul>
+<li><code>offset</code> Number</li>
+<li><code>noAssert</code> Boolean，可选，默认为false</li>
+<li>Return: Number</li>
+</div></ul>
+<p>从缓冲器的指定偏移处读取一个有符号8位整型。
+
+</p>
+<p>把<code>noAssert</code>设置为true，就会略过对<code>offset</code>的验证。也就说<code>offset</code>可以超出缓冲器的末尾。默认为<code>false</code>。
+
+</p>
+<p>同<code>buffer.readUInt8</code>相比，除了两者的结果被当作成对的有符号补码外，其它都一样。
+
+</p>
+<h3>buf.readInt16LE(offset, [noAssert])<span><a class="mark" href="#buffer_cn_buf_readint16le_offset_noassert" id="buffer_cn_buf_readint16le_offset_noassert">#</a></span></h3>
+<h3>buf.readInt16BE(offset, [noAssert])<span><a class="mark" href="#buffer_cn_buf_readint16be_offset_noassert" id="buffer_cn_buf_readint16be_offset_noassert">#</a></span></h3>
+<ul>
+<li><code>offset</code> Number</li>
+<li><code>noAssert</code> Boolean，可选，默认为false</li>
+<li>Return: Number</li>
+</ul>
+<p>以不同的字节顺序从缓冲器的指定偏移处读取一个有符号16位整型。
+
+</p>
+<p>把<code>noAssert</code>设置为true，就会略过对<code>offset</code>的验证。也就说<code>offset</code>可以超出缓冲器的末尾。默认为<code>false</code>。
+
+</p>
+<p>同<code>buffer.readUInt16*</code>相比，除了两者的结果被当作成对的有符号补码外，其它都一样。
+
+</p>
+<h3>buf.readInt32LE(offset, [noAssert])<span><a class="mark" href="#buffer_cn_buf_readint32le_offset_noassert" id="buffer_cn_buf_readint32le_offset_noassert">#</a></span></h3>
+<h3>buf.readInt32BE(offset, [noAssert])<span><a class="mark" href="#buffer_cn_buf_readint32be_offset_noassert" id="buffer_cn_buf_readint32be_offset_noassert">#</a></span></h3>
+<ul>
+<li><code>offset</code> Number</li>
+<li><code>noAssert</code> Boolean，可选，默认为false</li>
+<li>Return: Number</li>
+</ul>
+<p>以不同的字节顺序从缓冲器的指定偏移处读取一个有符号32位整型。
+
+</p>
+<p>把<code>noAssert</code>设置为true，就会略过对<code>offset</code>的验证。也就说<code>offset</code>可以超出缓冲器的末尾。默认为<code>false</code>。
+
+</p>
+<p>同<code>buffer.readUInt32*</code>相比，除了两者的结果被当作成对的有符号补码外，其它都一样。
+
+</p>
+<h3>buf.readFloatLE(offset, [noAssert])<span><a class="mark" href="#buffer_cn_buf_readfloatle_offset_noassert" id="buffer_cn_buf_readfloatle_offset_noassert">#</a></span></h3>
+<h3>buf.readFloatBE(offset, [noAssert])<span><a class="mark" href="#buffer_cn_buf_readfloatbe_offset_noassert" id="buffer_cn_buf_readfloatbe_offset_noassert">#</a></span></h3>
+<ul>
+<li><code>offset</code> Number</li>
+<li><code>noAssert</code> Boolean，可选，默认为false</li>
+<li>Return: Number</li>
+</ul>
+<p>以不同的字节顺序从缓冲器的指定偏移处读取一个32位浮点型。
+
+</p>
+<p>把<code>noAssert</code>设置为true，就会略过对<code>offset</code>的验证。也就说<code>offset</code>可以超出缓冲器的末尾。默认为<code>false</code>。
+
+</p>
+<p>示例：
+
+</p>
+<pre><code>var buf = new Buffer(4);
+
+buf[0] = 0x00;
+buf[1] = 0x00;
+buf[2] = 0x80;
+buf[3] = 0x3f;
+
+console.log(buf.readFloatLE(0));
+
+// 0x01</code></pre>
+<h3>buf.readDoubleLE(offset, [noAssert])<span><a class="mark" href="#buffer_cn_buf_readdoublele_offset_noassert" id="buffer_cn_buf_readdoublele_offset_noassert">#</a></span></h3>
+<h3>buf.readDoubleBE(offset, [noAssert])<span><a class="mark" href="#buffer_cn_buf_readdoublebe_offset_noassert" id="buffer_cn_buf_readdoublebe_offset_noassert">#</a></span></h3>
+<ul>
+<li><code>offset</code> Number</li>
+<li><code>noAssert</code> Boolean，可选，默认为false</li>
+<li>Return: Number</li>
+</ul>
+<p>以不同的字节顺序从缓冲器的指定偏移处读取一个64位双精度型。
+
+</p>
+<p>把<code>noAssert</code>设置为true，就会略过对<code>offset</code>的验证。也就说<code>offset</code>可以超出缓冲器的末尾。默认为<code>false</code>。
+
+</p>
+<p>示例：
+
+</p>
+<pre><code>var buf = new Buffer(8);
+
+buf[0] = 0x55;
+buf[1] = 0x55;
+buf[2] = 0x55;
+buf[3] = 0x55;
+buf[4] = 0x55;
+buf[5] = 0x55;
+buf[6] = 0xd5;
+buf[7] = 0x3f;
+
+console.log(buf.readDoubleLE(0));
+
+// 0.3333333333333333</code></pre>
+<h3>buf.writeUInt8(value, offset, [noAssert])<span><a class="mark" href="#buffer_cn_buf_writeuint8_value_offset_noassert" id="buffer_cn_buf_writeuint8_value_offset_noassert">#</a></span></h3>
+<div class="signature"><ul>
+<li><code>value</code> Number</li>
+<li><code>offset</code> Number</li>
+<li><code>noAssert</code> Boolean，可选，默认为false</li>
+</div></ul>
+<p>在缓冲器的指定偏移处写入一个<code>value</code>。注意，<code>value</code>必须是一个有效的无符号8位整型。
+
+</p>
+<p>把<code>noAssert</code>设置为true，就会略过对<code>offset</code>的验证。也就说<code>value</code>可能对该函数来说太大了，
+<code>offset</code>可能超出缓冲器的末尾，这些都会导致值在不知道的情况下被丢弃（译者注：即不会抛错）。
+在并不能确保正确的情况下，最好不要设置为true。默认为<code>false</code>。
+
+</p>
+<p>示例：
+
+</p>
+<pre><code>var buf = new Buffer(4);
+buf.writeUInt8(0x3, 0);
+buf.writeUInt8(0x4, 1);
+buf.writeUInt8(0x23, 2);
+buf.writeUInt8(0x42, 3);
+
+console.log(buf);
+
+// &lt;Buffer 03 04 23 42&gt;</code></pre>
+<h3>buf.writeUInt16LE(value, offset, [noAssert])<span><a class="mark" href="#buffer_cn_buf_writeuint16le_value_offset_noassert" id="buffer_cn_buf_writeuint16le_value_offset_noassert">#</a></span></h3>
+<h3>buf.writeUInt16BE(value, offset, [noAssert])<span><a class="mark" href="#buffer_cn_buf_writeuint16be_value_offset_noassert" id="buffer_cn_buf_writeuint16be_value_offset_noassert">#</a></span></h3>
+<ul>
+<li><code>value</code> Number</li>
+<li><code>offset</code> Number</li>
+<li><code>noAssert</code> Boolean，可选，默认为false</li>
+</ul>
+<p>以不同的字节顺序在缓冲器的指定偏移处写入一个<code>value</code>。注意，<code>value</code>必须是一个有效的无符号16位整型。
+
+</p>
+<p>把<code>noAssert</code>设置为true，就会略过对<code>offset</code>的验证。也就说<code>value</code>可能对该函数来说太大了，
+<code>offset</code>可能超出缓冲器的末尾，这些都会导致值在不知道的情况下被丢弃（译者注：即不会抛错）。
+在并不能确保正确的情况下，最好不要设置为true。默认为<code>false</code>。
+
+</p>
+<p>示例：
+
+</p>
+<pre><code>var buf = new Buffer(4);
+buf.writeUInt16BE(0xdead, 0);
+buf.writeUInt16BE(0xbeef, 2);
+
+console.log(buf);
+
+buf.writeUInt16LE(0xdead, 0);
+buf.writeUInt16LE(0xbeef, 2);
+
+console.log(buf);
+
+// &lt;Buffer de ad be ef&gt;
+// &lt;Buffer ad de ef be&gt;</code></pre>
+<h3>buf.writeUInt32LE(value, offset, [noAssert])<span><a class="mark" href="#buffer_cn_buf_writeuint32le_value_offset_noassert" id="buffer_cn_buf_writeuint32le_value_offset_noassert">#</a></span></h3>
+<h3>buf.writeUInt32BE(value, offset, [noAssert])<span><a class="mark" href="#buffer_cn_buf_writeuint32be_value_offset_noassert" id="buffer_cn_buf_writeuint32be_value_offset_noassert">#</a></span></h3>
+<ul>
+<li><code>value</code> Number</li>
+<li><code>offset</code> Number</li>
+<li><code>noAssert</code> Boolean，可选，默认为false</li>
+</ul>
+<p>以不同的字节顺序在缓冲器的指定偏移处写入一个<code>value</code>。注意，<code>value</code>必须是一个有效的无符号32位整型。
+
+</p>
+<p>把<code>noAssert</code>设置为true，就会略过对<code>offset</code>的验证。也就说<code>value</code>可能对该函数来说太大了，
+<code>offset</code>可能超出缓冲器的末尾，这些都会导致值在不知道的情况下被丢弃（译者注：即不会抛错）。
+在并不能确保正确的情况下，最好不要设置为true。默认为<code>false</code>。
+
+</p>
+<p>示例：
+
+</p>
+<pre><code>var buf = new Buffer(4);
+buf.writeUInt32BE(0xfeedface, 0);
+
+console.log(buf);
+
+buf.writeUInt32LE(0xfeedface, 0);
+
+console.log(buf);
+
+// &lt;Buffer fe ed fa ce&gt;
+// &lt;Buffer ce fa ed fe&gt;</code></pre>
+<h3>buf.writeInt8(value, offset, [noAssert])<span><a class="mark" href="#buffer_cn_buf_writeint8_value_offset_noassert" id="buffer_cn_buf_writeint8_value_offset_noassert">#</a></span></h3>
+<div class="signature"><ul>
+<li><code>value</code> Number</li>
+<li><code>offset</code> Number</li>
+<li><code>noAssert</code> Boolean，可选，默认为false</li>
+</div></ul>
+<p>在缓冲器的指定偏移处写入一个<code>value</code>。注意，<code>value</code>必须是一个有效的有符号8位整型。
+
+</p>
+<p>把<code>noAssert</code>设置为true，就会略过对<code>offset</code>的验证。也就说<code>value</code>可能对该函数来说太大了，
+<code>offset</code>可能超出缓冲器的末尾，这些都会导致值在不知道的情况下被丢弃（译者注：即不会抛错）。
+在并不能确保正确的情况下，最好不要设置为true。默认为<code>false</code>。
+
+</p>
+<p>同<code>buffer.writeUInt8</code>相比，除了两者写入<code>缓冲器</code>的值被当作成对的有符号整型补码外，其它都一样。
+
+</p>
+<h3>buf.writeInt16LE(value, offset, [noAssert])<span><a class="mark" href="#buffer_cn_buf_writeint16le_value_offset_noassert" id="buffer_cn_buf_writeint16le_value_offset_noassert">#</a></span></h3>
+<h3>buf.writeInt16BE(value, offset, [noAssert])<span><a class="mark" href="#buffer_cn_buf_writeint16be_value_offset_noassert" id="buffer_cn_buf_writeint16be_value_offset_noassert">#</a></span></h3>
+<ul>
+<li><code>value</code> Number</li>
+<li><code>offset</code> Number</li>
+<li><code>noAssert</code> Boolean，可选，默认为false</li>
+</ul>
+<p>以不同的字节顺序在缓冲器的指定偏移处写入一个<code>value</code>。注意，<code>value</code>必须是一个有效的有符号16位整型。
+
+</p>
+<p>把<code>noAssert</code>设置为true，就会略过对<code>offset</code>的验证。也就说<code>value</code>可能对该函数来说太大了，
+<code>offset</code>可能超出缓冲器的末尾，这些都会导致值在不知道的情况下被丢弃（译者注：即不会抛错）。
+在并不能确保正确的情况下，最好不要设置为true。默认为<code>false</code>。
+
+</p>
+<p>同<code>buffer.writeUInt16*</code>相比，除了两者写入<code>缓冲器</code>的值被当作成对的有符号整型补码外，其它都一样。
+
+</p>
+<h3>buf.writeInt32LE(value, offset, [noAssert])<span><a class="mark" href="#buffer_cn_buf_writeint32le_value_offset_noassert" id="buffer_cn_buf_writeint32le_value_offset_noassert">#</a></span></h3>
+<h3>buf.writeInt32BE(value, offset, [noAssert])<span><a class="mark" href="#buffer_cn_buf_writeint32be_value_offset_noassert" id="buffer_cn_buf_writeint32be_value_offset_noassert">#</a></span></h3>
+<ul>
+<li><code>value</code> Number</li>
+<li><code>offset</code> Number</li>
+<li><code>noAssert</code> Boolean，可选，默认为false</li>
+</ul>
+<p>以不同的字节顺序在缓冲器的指定偏移处写入一个<code>value</code>。注意，<code>value</code>必须是一个有效的有符号32位整型。
+
+</p>
+<p>把<code>noAssert</code>设置为true，就会略过对<code>offset</code>的验证。也就说<code>value</code>可能对该函数来说太大了，
+<code>offset</code>可能超出缓冲器的末尾，这些都会导致值在不知道的情况下被丢弃（译者注：即不会抛错）。
+在并不能确保正确的情况下，最好不要设置为true。默认为<code>false</code>。
+
+</p>
+<p>同<code>buffer.writeUInt32*</code>相比，除了两者写入<code>缓冲器</code>的值被当作成对的有符号整型补码外，其它都一样。
+
+</p>
+<h3>buf.writeFloatLE(value, offset, [noAssert])<span><a class="mark" href="#buffer_cn_buf_writefloatle_value_offset_noassert" id="buffer_cn_buf_writefloatle_value_offset_noassert">#</a></span></h3>
+<h3>buf.writeFloatBE(value, offset, [noAssert])<span><a class="mark" href="#buffer_cn_buf_writefloatbe_value_offset_noassert" id="buffer_cn_buf_writefloatbe_value_offset_noassert">#</a></span></h3>
+<ul>
+<li><code>value</code> Number</li>
+<li><code>offset</code> Number</li>
+<li><code>noAssert</code> Boolean，可选，默认为false</li>
+</ul>
+<p>以不同的字节顺序在缓冲器的指定偏移处写入一个<code>value</code>。注意，<code>value</code>必须是一个有效的32位浮点型。
+
+</p>
+<p>把<code>noAssert</code>设置为true，就会略过对<code>offset</code>的验证。也就说<code>value</code>可能对该函数来说太大了，
+<code>offset</code>可能超出缓冲器的末尾，这些都会导致值在不知道的情况下被丢弃（译者注：即不会抛错）。
+在并不能确保正确的情况下，最好不要设置为true。默认为<code>false</code>。
+
+</p>
+<p>示例：
+
+</p>
+<pre><code>var buf = new Buffer(4);
+buf.writeFloatBE(0xcafebabe, 0);
+
+console.log(buf);
+
+buf.writeFloatLE(0xcafebabe, 0);
+
+console.log(buf);
+
+// &lt;Buffer 4f 4a fe bb&gt;
+// &lt;Buffer bb fe 4a 4f&gt;</code></pre>
+<h3>buf.writeDoubleLE(value, offset, [noAssert])<span><a class="mark" href="#buffer_cn_buf_writedoublele_value_offset_noassert" id="buffer_cn_buf_writedoublele_value_offset_noassert">#</a></span></h3>
+<h3>buf.writeDoubleBE(value, offset, [noAssert])<span><a class="mark" href="#buffer_cn_buf_writedoublebe_value_offset_noassert" id="buffer_cn_buf_writedoublebe_value_offset_noassert">#</a></span></h3>
+<ul>
+<li><code>value</code> Number</li>
+<li><code>offset</code> Number</li>
+<li><code>noAssert</code> Boolean，可选，默认为false</li>
+</ul>
+<p>以不同的字节顺序在缓冲器的指定偏移处写入一个<code>value</code>。注意，<code>value</code>必须是一个有效的64位双精度型。
+
+</p>
+<p>把<code>noAssert</code>设置为true，就会略过对<code>offset</code>的验证。也就说<code>value</code>可能对该函数来说太大了，
+<code>offset</code>可能超出缓冲器的末尾，这些都会导致值在不知道的情况下被丢弃（译者注：即不会抛错）。
+在并不能确保正确的情况下，最好不要设置为true。默认为<code>false</code>。
+
+</p>
+<p>示例：
+
+</p>
+<pre><code>var buf = new Buffer(8);
+buf.writeDoubleBE(0xdeadbeefcafebabe, 0);
+
+console.log(buf);
+
+buf.writeDoubleLE(0xdeadbeefcafebabe, 0);
+
+console.log(buf);
+
+// &lt;Buffer 43 eb d5 b7 dd f9 5f d7&gt;
+// &lt;Buffer d7 5f f9 dd b7 d5 eb 43&gt;</code></pre>
+<h3>buf.fill(value, [offset], [end])<span><a class="mark" href="#buffer_cn_buf_fill_value_offset_end" id="buffer_cn_buf_fill_value_offset_end">#</a></span></h3>
+<div class="signature"><ul>
+<li><code>value</code></li>
+<li><code>offset</code> Number，可选</li>
+<li><code>end</code> Number，可选</li>
+</div></ul>
+<p>用给定的值填充缓冲器。如果没有给出<code>offset</code>（默认为<code>0</code>）和<code>end</code>（默认为<code>buffer.length</code>），那么会填充整个缓冲器。
+
+</p>
+<pre><code>var b = new Buffer(50);
+b.fill(&quot;h&quot;);</code></pre>
+<h2>buffer.INSPECT_MAX_BYTES<span><a class="mark" href="#buffer_cn_buffer_inspect_max_bytes" id="buffer_cn_buffer_inspect_max_bytes">#</a></span></h2>
+<div class="signature"><ul>
+<li>Number，默认为50</li>
+</div></ul>
+<p>指明当调用<code>buffer.inspect()</code>允许返回的字节数。它可以被用户模块重载。
+
+</p>
+<p>注意，这个属性只存在于用<code>require(&apos;buffer&apos;)</code>返回的缓冲器模块中，不存在于全局的缓冲器类或缓冲器实例中。
+
+</p>
+<h2>类：SlowBuffer<span><a class="mark" href="#buffer_cn_slowbuffer" id="buffer_cn_slowbuffer">#</a></span></h2>
+<p>这个类主要在内部使用。JavaScript程序必须使用Buffer来代替SlowBuffer。
+
+</p>
+<p>在服务器生命周期内，为了避免给众多小块内存分配C++缓冲器对象的开销，Node会以8Kb（8192字节）为单元分配内存。
+如果一个缓冲器小于这个单元，那么会返回一个SlowBuffer对象。如果大于这个单元，那么Node会直接为其分配一个SlowBuffer片（Slab）。
+（译者注：即可以有效减少碎片的产生）。
+</p>
+
+          </div>
+        </div>
+    </div>
+    <div id="footer">
+        <ul class="clearfix">
+		
+		<li><a href="http://www.cnodejs.org" class="home">NodeJS中文社区</a></li>
+		<li><a href="http://www.nodejs.org/#download" class="download" target="_blank">NodeJS下载</a></li>
+		<li><a href="http://cnodejs.org/tag/%E7%A4%BE%E5%8C%BA%E6%B4%BB%E5%8A%A8" class="community">社区活动</a></li>
+		<li><a href="#" class="docs current">API文档</a></li>                
+		<li><a href="http://nodejob.cnodejs.net/" class="jobs">工作机会</a></li>
+		<li><a href="http://cnodejs.org/about" class="about">关于我们</a></li>
+		<li><a href="http://www.nodejs.org" class="home">NodeJS官网</a></li>
+		<li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
+             <li><a href="http://weibo.com/cnodejs">@cnodejs</a></li>
+        </ul>
+
+        <p>Copyright 2011 &copy cnodejs.org</p>
+    </div>
+
+  <script src="js/sh_main.js"></script>
+  <script src="js/sh_javascript.min.js"></script>
+  <script>highlight(undefined, undefined, 'pre');</script>
+</body>
+</html>

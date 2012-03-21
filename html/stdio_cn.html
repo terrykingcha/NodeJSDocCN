@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>console Node.js v0.6.11 中文手册和文档</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/sh.css">
+  <link rel="canonical" href="http://nodejs.org/api/stdio_cn.html">
+</head>
+<body class="alt apidoc" id="api-section-stdio_cn">
+    <div id="intro" class="interior">
+        <a href="/" title="Go back to the home page">
+            <img id="logo" src="http://nodejs.org/images/logo-light.png" alt="node.js">
+        </a>
+    </div>
+    <div id="content" class="clearfix">
+        <div id="column2" class="interior">
+            <ul>
+                <li><a href="http://www.cnodejs.org" class="home">NodeJS中文社区</a></li>
+                <li><a href="http://www.nodejs.org/#download" class="download"  target="_blank">NodeJS下载</a></li>
+                <li><a href="http://cnodejs.org/tag/%E7%A4%BE%E5%8C%BA%E6%B4%BB%E5%8A%A8" class="community">社区活动</a></li>
+                <li><a href="#" class="docs current">API文档</a></li>                
+                <li><a href="http://nodejob.cnodejs.net/" class="jobs">工作机会</a></li>
+                <li><a href="http://cnodejs.org/about" class="about">关于我们</a></li>
+                <li><a href="http://www.nodejs.org" class="home">NodeJS官网</a></li>
+                <li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
+            </ul>
+            <p class="twitter"><a href="http://weibo.com/cnodejs">@cnodejs</a></p>
+        </div>
+
+        <div id="column1" class="interior">
+          <header>
+            <h1>Node.js v0.6.11 中文手册和文档</h1>
+            <div id="gtoc">
+              <p><a href="index_cn.html" name="toc">索引</a></p>
+            </div>
+            <hr>
+          </header>
+
+          <div id="toc">
+            <h2>目录</h2>
+            <ul>
+<li><a href="#stdio_cn_console">console</a><ul>
+<li><a href="#stdio_cn_console_log">console.log()</a></li>
+<li><a href="#stdio_cn_console_info">console.info()</a></li>
+<li><a href="#stdio_cn_console_warn">console.warn()</a></li>
+<li><a href="#stdio_cn_console_error">console.error()</a></li>
+<li><a href="#stdio_cn_console_dir_obj">console.dir(obj)</a></li>
+<li><a href="#stdio_cn_console_time_label">console.time(label)</a></li>
+<li><a href="#stdio_cn_console_timeend_label">console.timeEnd(label)</a></li>
+<li><a href="#stdio_cn_console_trace">console.trace()</a></li>
+<li><a href="#stdio_cn_console_assert">console.assert()</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+
+          <div id="apicontent">
+            <h1>console<span><a class="mark" href="#stdio_cn_console" id="stdio_cn_console">#</a></span></h1>
+<div class="signature"><ul>
+<li><span class="type">Object</span></li>
+</div></ul>
+<!--type=global-->
+
+<p>用于在stdout和stderr打印信息。就像大多数web浏览器提供的控制台对象函数那样，
+用这个输出的信息会被发送到stdout或stderr中。
+
+
+</p>
+<h2>console.log()<span><a class="mark" href="#stdio_cn_console_log" id="stdio_cn_console_log">#</a></span></h2>
+<p>在stdout中另起一行打印信息。这个函数，可以像<code>printf()</code>方法那样接受多个参数，例如：
+
+</p>
+<pre><code>console.log(&apos;count: %d&apos;, count);</code></pre>
+<p>如果在第一个字符串中并没有找到格式化标签，那么会对之后的每个参数使用<code>util.inspect</code>方法。
+参见<a href="util_cn.html#util.format">util.format()</a>获取更多信息。
+
+</p>
+<h2>console.info()<span><a class="mark" href="#stdio_cn_console_info" id="stdio_cn_console_info">#</a></span></h2>
+<p>和<code>console.log</code>相同。
+
+</p>
+<h2>console.warn()<span><a class="mark" href="#stdio_cn_console_warn" id="stdio_cn_console_warn">#</a></span></h2>
+<h2>console.error()<span><a class="mark" href="#stdio_cn_console_error" id="stdio_cn_console_error">#</a></span></h2>
+<p>和<code>console.log</code>类似，只是在stderr中打印信息.
+
+</p>
+<h2>console.dir(obj)<span><a class="mark" href="#stdio_cn_console_dir_obj" id="stdio_cn_console_dir_obj">#</a></span></h2>
+<p>对<code>obj</code>执行<code>util.inspect</code>方法，并把返回的结果字符串打印到stderr。
+
+</p>
+<h2>console.time(label)<span><a class="mark" href="#stdio_cn_console_time_label" id="stdio_cn_console_time_label">#</a></span></h2>
+<p>创建计时器。
+
+</p>
+<h2>console.timeEnd(label)<span><a class="mark" href="#stdio_cn_console_timeend_label" id="stdio_cn_console_timeend_label">#</a></span></h2>
+<p>终止计时器，并输出结果。例如：
+
+</p>
+<pre><code>console.time(&apos;100-elements&apos;);
+for (var i = 0; i &lt; 100; i++) {
+  ;
+}
+console.timeEnd(&apos;100-elements&apos;);</code></pre>
+<p>（译者注：最后将打印运行这个循环所使用的时间）
+
+</p>
+<h2>console.trace()<span><a class="mark" href="#stdio_cn_console_trace" id="stdio_cn_console_trace">#</a></span></h2>
+<p>在stderr中打印当前脚本执行位置的调用堆栈。
+
+</p>
+<h2>console.assert()<span><a class="mark" href="#stdio_cn_console_assert" id="stdio_cn_console_assert">#</a></span></h2>
+<p>和<code>assert.ok()</code>相同。
+
+</p>
+
+          </div>
+        </div>
+    </div>
+    <div id="footer">
+        <ul class="clearfix">
+		
+		<li><a href="http://www.cnodejs.org" class="home">NodeJS中文社区</a></li>
+		<li><a href="http://www.nodejs.org/#download" class="download" target="_blank">NodeJS下载</a></li>
+		<li><a href="http://cnodejs.org/tag/%E7%A4%BE%E5%8C%BA%E6%B4%BB%E5%8A%A8" class="community">社区活动</a></li>
+		<li><a href="#" class="docs current">API文档</a></li>                
+		<li><a href="http://nodejob.cnodejs.net/" class="jobs">工作机会</a></li>
+		<li><a href="http://cnodejs.org/about" class="about">关于我们</a></li>
+		<li><a href="http://www.nodejs.org" class="home">NodeJS官网</a></li>
+		<li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
+             <li><a href="http://weibo.com/cnodejs">@cnodejs</a></li>
+        </ul>
+
+        <p>Copyright 2011 &copy cnodejs.org</p>
+    </div>
+
+  <script src="js/sh_main.js"></script>
+  <script src="js/sh_javascript.min.js"></script>
+  <script>highlight(undefined, undefined, 'pre');</script>
+</body>
+</html>

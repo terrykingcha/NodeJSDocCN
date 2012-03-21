@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>进程对象 Node.js v0.6.11 中文手册和文档</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/sh.css">
+  <link rel="canonical" href="http://nodejs.org/api/process_cn.html">
+</head>
+<body class="alt apidoc" id="api-section-process_cn">
+    <div id="intro" class="interior">
+        <a href="/" title="Go back to the home page">
+            <img id="logo" src="http://nodejs.org/images/logo-light.png" alt="node.js">
+        </a>
+    </div>
+    <div id="content" class="clearfix">
+        <div id="column2" class="interior">
+            <ul>
+                <li><a href="http://www.cnodejs.org" class="home">NodeJS中文社区</a></li>
+                <li><a href="http://www.nodejs.org/#download" class="download"  target="_blank">NodeJS下载</a></li>
+                <li><a href="http://cnodejs.org/tag/%E7%A4%BE%E5%8C%BA%E6%B4%BB%E5%8A%A8" class="community">社区活动</a></li>
+                <li><a href="#" class="docs current">API文档</a></li>                
+                <li><a href="http://nodejob.cnodejs.net/" class="jobs">工作机会</a></li>
+                <li><a href="http://cnodejs.org/about" class="about">关于我们</a></li>
+                <li><a href="http://www.nodejs.org" class="home">NodeJS官网</a></li>
+                <li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
+            </ul>
+            <p class="twitter"><a href="http://weibo.com/cnodejs">@cnodejs</a></p>
+        </div>
+
+        <div id="column1" class="interior">
+          <header>
+            <h1>Node.js v0.6.11 中文手册和文档</h1>
+            <div id="gtoc">
+              <p><a href="index_cn.html" name="toc">索引</a></p>
+            </div>
+            <hr>
+          </header>
+
+          <div id="toc">
+            <h2>目录</h2>
+            <ul>
+<li><a href="#process_cn">进程对象</a><ul>
+<li><a href="#process_cn_exit">&apos;exit&apos;事件</a></li>
+<li><a href="#process_cn_uncaughtexception">&apos;uncaughtException&apos;事件</a></li>
+<li><a href="#process_cn_1">信号事件</a></li>
+<li><a href="#process_cn_process_stdout">process.stdout</a></li>
+<li><a href="#process_cn_process_stderr">process.stderr</a></li>
+<li><a href="#process_cn_process_stdin">process.stdin</a></li>
+<li><a href="#process_cn_process_argv">process.argv</a></li>
+<li><a href="#process_cn_process_execpath">process.execPath</a></li>
+<li><a href="#process_cn_process_abort">process.abort()</a></li>
+<li><a href="#process_cn_process_chdir_directory">process.chdir(directory)</a></li>
+<li><a href="#process_cn_process_cwd">process.cwd()</a></li>
+<li><a href="#process_cn_process_env">process.env</a></li>
+<li><a href="#process_cn_process_exit_code">process.exit([code])</a></li>
+<li><a href="#process_cn_process_getgid">process.getgid()</a></li>
+<li><a href="#process_cn_process_setgid_id">process.setgid(id)</a></li>
+<li><a href="#process_cn_process_getuid">process.getuid()</a></li>
+<li><a href="#process_cn_process_setuid_id">process.setuid(id)</a></li>
+<li><a href="#process_cn_process_version">process.version</a></li>
+<li><a href="#process_cn_process_versions">process.versions</a></li>
+<li><a href="#process_cn_process_installprefix">process.installPrefix</a></li>
+<li><a href="#process_cn_process_kill_pid_signal">process.kill(pid, [signal])</a></li>
+<li><a href="#process_cn_process_pid">process.pid</a></li>
+<li><a href="#process_cn_process_title">process.title</a></li>
+<li><a href="#process_cn_process_arch">process.arch</a></li>
+<li><a href="#process_cn_process_platform">process.platform</a></li>
+<li><a href="#process_cn_process_memoryusage">process.memoryUsage()</a></li>
+<li><a href="#process_cn_process_nexttick_callback">process.nextTick(callback)</a></li>
+<li><a href="#process_cn_process_umask_mask">process.umask([mask])</a></li>
+<li><a href="#process_cn_process_uptime">process.uptime()</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+
+          <div id="apicontent">
+            <h1>进程对象<span><a class="mark" href="#process_cn" id="process_cn">#</a></span></h1>
+<!-- type=global -->
+
+<p><code>process</code>对象是一个全局对象，可以随时随地访问它。它是<code>EventEmitter</code>的一个实例。
+
+
+</p>
+<h2>&apos;exit&apos;事件<span><a class="mark" href="#process_cn_exit" id="process_cn_exit">#</a></span></h2>
+<p><code>function () {}</code>
+
+</p>
+<p>当进程将要退出时会触发该句柄。通常是定时检查模块状态的一个钩子（hook，比如用于单元测试）。
+主事件循环，在<code>exit</code>回调完成后将终止运行，所以定时器也就不再按计划执行了。
+
+</p>
+<p>监听<code>exit</code>事件的例子：
+
+</p>
+<pre><code>process.on(&apos;exit&apos;, function () {
+  process.nextTick(function () {
+   console.log(&apos;This will not run&apos;);
+  });
+  console.log(&apos;About to exit.&apos;);
+});</code></pre>
+<h2>&apos;uncaughtException&apos;事件<span><a class="mark" href="#process_cn_uncaughtexception" id="process_cn_uncaughtexception">#</a></span></h2>
+<p><code>function (err) { }</code>
+
+</p>
+<p>当异常一直冒泡到事件循环层时触发该句柄。如果给这个异常添加了一个监听器，
+那么默认行为（即打印堆栈跟踪并退出）将不再发生。
+
+</p>
+<p>监听<code>uncaughtException</code>事件的例子：
+
+</p>
+<pre><code>process.on(&apos;uncaughtException&apos;, function (err) {
+  console.log(&apos;Caught exception: &apos; + err);
+});
+
+setTimeout(function () {
+  console.log(&apos;This will still run.&apos;);
+}, 500);
+
+// 故意引发一个异常，但不捕获。
+nonexistentFunc();
+console.log(&apos;This will not run.&apos;);</code></pre>
+<p>注意，<code>uncaughtException</code>事件对于异常处理来说是非常简陋的机制。在程序中使用try/catch能更好的控制程序流程。
+而对于需要持续运行的服务器程序来说，<code>uncaughtException</code>事件是一个有效且安全的机制。
+
+</p>
+<h2>信号事件<span><a class="mark" href="#process_cn_1" id="process_cn_1">#</a></span></h2>
+<!--type=event-->
+<!--name=SIGINT, SIGUSR1, etc.-->
+
+<p><code>function () {}</code>
+
+</p>
+<p>当进程接收到一个信号时触发该句柄。可参见sigaction(2)中的标准POSIX信号列表，比如SIGINT，SIGUSR1等等。
+
+</p>
+<p>监听<code>SIGINT</code>信号事件的例子：
+
+</p>
+<pre><code>// 等待从标准输入中读取，以保证不退出程序
+process.stdin.resume();
+
+process.on(&apos;SIGINT&apos;, function () {
+  console.log(&apos;Got SIGINT.  Press Control-D to exit.&apos;);
+});</code></pre>
+<p>在大多数终端程序中，用<code>Control-C</code>可以简单的发送<code>SIGINT</code>信号。
+
+
+</p>
+<h2>process.stdout<span><a class="mark" href="#process_cn_process_stdout" id="process_cn_process_stdout">#</a></span></h2>
+<p>指向<code>标准输出（stdout）</code>的<code>可写流</code>。
+
+</p>
+<p>定义<code>console.log</code>的例子：
+
+</p>
+<pre><code>console.log = function (d) {
+  process.stdout.write(d + &apos;\n&apos;);
+};</code></pre>
+<p>在Node中<code>process.stderr</code>和<code>process.stdout</code>和其它流有区别。在这个流上的写操作通常是阻塞的。
+当指向标准文件或TTY文件描述符时，会发生阻塞。而当指向管道时，就像其它流一样不再阻塞了。
+
+
+</p>
+<h2>process.stderr<span><a class="mark" href="#process_cn_process_stderr" id="process_cn_process_stderr">#</a></span></h2>
+<p>指向<code>标准错误（stderr）</code>的可写流。
+
+</p>
+<p>在Node中<code>process.stderr</code>和<code>process.stdout</code>和其它流有区别。在这个流上的写操作通常是阻塞的。
+当指向标准文件或TTY文件描述符时，会发生阻塞。而当指向管道时，就像其它流一样不再阻塞了。
+
+
+</p>
+<h2>process.stdin<span><a class="mark" href="#process_cn_process_stdin" id="process_cn_process_stdin">#</a></span></h2>
+<p>指向<code>标准输入（stdin）</code>的可读流。标准输入流默认是暂停的，所以必须通过<code>process.stdin.resume()</code>
+才能从流中读取。
+
+</p>
+<p>打开标准输入，并同时监听两个事件的例子：
+
+</p>
+<pre><code>process.stdin.resume();
+process.stdin.setEncoding(&apos;utf8&apos;);
+
+process.stdin.on(&apos;data&apos;, function (chunk) {
+  process.stdout.write(&apos;data: &apos; + chunk);
+});
+
+process.stdin.on(&apos;end&apos;, function () {
+  process.stdout.write(&apos;end&apos;);
+});</code></pre>
+<h2>process.argv<span><a class="mark" href="#process_cn_process_argv" id="process_cn_process_argv">#</a></span></h2>
+<p>一个包含命令行参数的数组。第一个数组元素是<code>node</code>，第二个元素是JavaScript文件的名字。之后的元素
+就是附加的命令行参数。
+
+</p>
+<pre><code>// 打印 process.argv
+process.argv.forEach(function (val, index, array) {
+  console.log(index + &apos;: &apos; + val);
+});</code></pre>
+<p>会输出：
+
+</p>
+<pre><code>$ node process-2.js one two=three four
+0: node
+1: /Users/mjr/work/node/process-2.js
+2: one
+3: two=three
+4: four</code></pre>
+<h2>process.execPath<span><a class="mark" href="#process_cn_process_execpath" id="process_cn_process_execpath">#</a></span></h2>
+<p>这是开启进程的那个可执行文件的绝对路径。
+
+</p>
+<p>例如:
+
+</p>
+<pre><code>/usr/local/bin/node</code></pre>
+<h2>process.abort()<span><a class="mark" href="#process_cn_process_abort" id="process_cn_process_abort">#</a></span></h2>
+<p>这会让Node触发一个中止事件。它会让Node退出，并生成一个核心文件。
+
+</p>
+<h2>process.chdir(directory)<span><a class="mark" href="#process_cn_process_chdir_directory" id="process_cn_process_chdir_directory">#</a></span></h2>
+<p>变更进程的当前工作目录，如果失败则抛出异常。
+
+</p>
+<pre><code>console.log(&apos;Starting directory: &apos; + process.cwd());
+try {
+  process.chdir(&apos;/tmp&apos;);
+  console.log(&apos;New directory: &apos; + process.cwd());
+}
+catch (err) {
+  console.log(&apos;chdir: &apos; + err);
+}</code></pre>
+<h2>process.cwd()<span><a class="mark" href="#process_cn_process_cwd" id="process_cn_process_cwd">#</a></span></h2>
+<p>返回进程的当前工作目录。
+
+</p>
+<pre><code>console.log(&apos;Current directory: &apos; + process.cwd());</code></pre>
+<h2>process.env<span><a class="mark" href="#process_cn_process_env" id="process_cn_process_env">#</a></span></h2>
+<p>一个包含用户环境的对象。参见environ(7)。
+
+
+</p>
+<h2>process.exit([code])<span><a class="mark" href="#process_cn_process_exit_code" id="process_cn_process_exit_code">#</a></span></h2>
+<p>以指定的<code>代码（code）</code>结束进程。如果不指定，退出时将使用表示<code>成功</code>的代码<code>0</code>。
+
+
+</p>
+<p>用表示<code>失败</code>的代码来退出的例子：
+
+</p>
+<pre><code>process.exit(1);</code></pre>
+<p>执行Node的shell就会知道退出代码是1.
+
+
+</p>
+<h2>process.getgid()<span><a class="mark" href="#process_cn_process_getgid" id="process_cn_process_getgid">#</a></span></h2>
+<p>获得进程的群组标识（参见getgid(2)）。参数是群组的数字id，并不是群组名。
+
+</p>
+<pre><code>console.log(&apos;Current gid: &apos; + process.getgid());</code></pre>
+<h2>process.setgid(id)<span><a class="mark" href="#process_cn_process_setgid_id" id="process_cn_process_setgid_id">#</a></span></h2>
+<p>设置进程的群组标识（参见setgid(2)）。参数可以是数字ID，也可以群组名字符串。
+如果指定的是群组名，在解析成数字ID的过程中，进程会被阻塞。
+
+</p>
+<pre><code>console.log(&apos;Current gid: &apos; + process.getgid());
+try {
+  process.setgid(501);
+  console.log(&apos;New gid: &apos; + process.getgid());
+}
+catch (err) {
+  console.log(&apos;Failed to set gid: &apos; + err);
+}</code></pre>
+<h2>process.getuid()<span><a class="mark" href="#process_cn_process_getuid" id="process_cn_process_getuid">#</a></span></h2>
+<p>获得进程的用户标识（参见getuid(2)）。参数是用户的数字id，并不是用户名。
+
+</p>
+<pre><code>console.log(&apos;Current uid: &apos; + process.getuid());</code></pre>
+<h2>process.setuid(id)<span><a class="mark" href="#process_cn_process_setuid_id" id="process_cn_process_setuid_id">#</a></span></h2>
+<p>设置进程的用户标识（参见setuid(2)）。参数可以是数字ID，也可以用户名字符串。
+如果指定的是用户名，在解析成数字ID的过程中，进程会被阻塞。
+
+</p>
+<pre><code>console.log(&apos;Current uid: &apos; + process.getuid());
+try {
+  process.setuid(501);
+  console.log(&apos;New uid: &apos; + process.getuid());
+}
+catch (err) {
+  console.log(&apos;Failed to set uid: &apos; + err);
+}</code></pre>
+<h2>process.version<span><a class="mark" href="#process_cn_process_version" id="process_cn_process_version">#</a></span></h2>
+<p>一个内建属性，用来显示<code>Node的版本</code>（NODE_VERSION）。
+
+</p>
+<pre><code>console.log(&apos;Version: &apos; + process.version);</code></pre>
+<h2>process.versions<span><a class="mark" href="#process_cn_process_versions" id="process_cn_process_versions">#</a></span></h2>
+<p>用于显示Node的版本描述字符串，以及它的依赖包。
+
+</p>
+<pre><code>console.log(process.versions);</code></pre>
+<p>输出：
+
+</p>
+<pre><code>{ node: &apos;0.4.12&apos;,
+  v8: &apos;3.1.8.26&apos;,
+  ares: &apos;1.7.4&apos;,
+  ev: &apos;4.4&apos;,
+  openssl: &apos;1.0.0e-fips&apos; }</code></pre>
+<h2>process.installPrefix<span><a class="mark" href="#process_cn_process_installprefix" id="process_cn_process_installprefix">#</a></span></h2>
+<p>一个内建属性，用来显示<code>Node的安装路径前缀</code>（NODE_PREFIX）。
+
+
+</p>
+<pre><code>console.log(&apos;Prefix: &apos; + process.installPrefix);</code></pre>
+<h2>process.kill(pid, [signal])<span><a class="mark" href="#process_cn_process_kill_pid_signal" id="process_cn_process_kill_pid_signal">#</a></span></h2>
+<p>发送一个信号给某个进程。<code>pid</code>是进程id，而<code>signal</code>是要发送给进程的信号描述名，例如
+&apos;SINGIT&apos;或&apos;SIGUSR1&apos;等。如果省略这个参数，发送信号默认为&apos;SIGTERM&apos;。更多信息，请参见kill(2)。
+
+</p>
+<p>注意，这个函数的名称正巧是<code>process.kill</code>，它仅仅只是一个信号发送器，就像<code>kill</code>流程一样。
+除了杀死目标进程外，发送信号还可以做一些其它事情。
+
+</p>
+<p>给自身发送信号的例子：
+
+</p>
+<pre><code>process.on(&apos;SIGHUP&apos;, function () {
+  console.log(&apos;Got SIGHUP signal.&apos;);
+});
+
+setTimeout(function () {
+  console.log(&apos;Exiting.&apos;);
+  process.exit(0);
+}, 100);
+
+process.kill(process.pid, &apos;SIGHUP&apos;);</code></pre>
+<h2>process.pid<span><a class="mark" href="#process_cn_process_pid" id="process_cn_process_pid">#</a></span></h2>
+<p>进程的PID。
+
+</p>
+<pre><code>console.log(&apos;This process is pid &apos; + process.pid);</code></pre>
+<h2>process.title<span><a class="mark" href="#process_cn_process_title" id="process_cn_process_title">#</a></span></h2>
+<p>获取或设置在&apos;ps&apos;命令中显示的进程标题。
+
+</p>
+<h2>process.arch<span><a class="mark" href="#process_cn_process_arch" id="process_cn_process_arch">#</a></span></h2>
+<p>显示运行进程的硬件架构，例如<code>&apos;arm&apos;</code>，<code>&apos;ia32&apos;</code>，或 <code>&apos;x64&apos;</code>。
+
+</p>
+<pre><code>console.log(&apos;This processor architecture is &apos; + process.arch);</code></pre>
+<h2>process.platform<span><a class="mark" href="#process_cn_process_platform" id="process_cn_process_platform">#</a></span></h2>
+<p>显示运行进程的平台信息，例如<code>&apos;linux2&apos;</code>，<code>&apos;darwin&apos;</code>等。
+
+</p>
+<pre><code>console.log(&apos;This platform is &apos; + process.platform);</code></pre>
+<h2>process.memoryUsage()<span><a class="mark" href="#process_cn_process_memoryusage" id="process_cn_process_memoryusage">#</a></span></h2>
+<p>返回一个描述Node进程内存使用量的对象，单位是字节。
+
+</p>
+<pre><code>var util = require(&apos;util&apos;);
+
+console.log(util.inspect(process.memoryUsage()));</code></pre>
+<p>输出：
+
+</p>
+<pre><code>{ rss: 4935680,
+  heapTotal: 1826816,
+  heapUsed: 650472 }</code></pre>
+<p><code>heapTotal</code>和<code>heapUsed</code>指示的是V8内存使用情况。
+
+
+</p>
+<h2>process.nextTick(callback)<span><a class="mark" href="#process_cn_process_nexttick_callback" id="process_cn_process_nexttick_callback">#</a></span></h2>
+<p>在事件循环过程中的下一次循环周期内执行回调。这并<em>不是</em><code>setTimeout（fn, 0）</code>的别名，实际上它要高效得多。
+
+</p>
+<pre><code>process.nextTick(function () {
+  console.log(&apos;nextTick callback&apos;);
+});</code></pre>
+<h2>process.umask([mask])<span><a class="mark" href="#process_cn_process_umask_mask" id="process_cn_process_umask_mask">#</a></span></h2>
+<p>设置或读取进程的文件模式创建掩码（umask）。子进程从父进程那里继承这个掩码。
+如果设定了<code>mask</code>参数的值，函数会返回旧的掩码，否则返回当前的掩码。
+
+</p>
+<pre><code>var oldmask, newmask = 0644;
+
+oldmask = process.umask(newmask);
+console.log(&apos;Changed umask from: &apos; + oldmask.toString(8) +
+            &apos; to &apos; + newmask.toString(8));</code></pre>
+<h2>process.uptime()<span><a class="mark" href="#process_cn_process_uptime" id="process_cn_process_uptime">#</a></span></h2>
+<p>Node已经运行的秒数。
+</p>
+
+          </div>
+        </div>
+    </div>
+    <div id="footer">
+        <ul class="clearfix">
+		
+		<li><a href="http://www.cnodejs.org" class="home">NodeJS中文社区</a></li>
+		<li><a href="http://www.nodejs.org/#download" class="download" target="_blank">NodeJS下载</a></li>
+		<li><a href="http://cnodejs.org/tag/%E7%A4%BE%E5%8C%BA%E6%B4%BB%E5%8A%A8" class="community">社区活动</a></li>
+		<li><a href="#" class="docs current">API文档</a></li>                
+		<li><a href="http://nodejob.cnodejs.net/" class="jobs">工作机会</a></li>
+		<li><a href="http://cnodejs.org/about" class="about">关于我们</a></li>
+		<li><a href="http://www.nodejs.org" class="home">NodeJS官网</a></li>
+		<li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
+             <li><a href="http://weibo.com/cnodejs">@cnodejs</a></li>
+        </ul>
+
+        <p>Copyright 2011 &copy cnodejs.org</p>
+    </div>
+
+  <script src="js/sh_main.js"></script>
+  <script src="js/sh_javascript.min.js"></script>
+  <script>highlight(undefined, undefined, 'pre');</script>
+</body>
+</html>

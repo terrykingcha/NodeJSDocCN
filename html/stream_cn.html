@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>流接口 Node.js v0.6.11 中文手册和文档</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/sh.css">
+  <link rel="canonical" href="http://nodejs.org/api/stream_cn.html">
+</head>
+<body class="alt apidoc" id="api-section-stream_cn">
+    <div id="intro" class="interior">
+        <a href="/" title="Go back to the home page">
+            <img id="logo" src="http://nodejs.org/images/logo-light.png" alt="node.js">
+        </a>
+    </div>
+    <div id="content" class="clearfix">
+        <div id="column2" class="interior">
+            <ul>
+                <li><a href="http://www.cnodejs.org" class="home">NodeJS中文社区</a></li>
+                <li><a href="http://www.nodejs.org/#download" class="download"  target="_blank">NodeJS下载</a></li>
+                <li><a href="http://cnodejs.org/tag/%E7%A4%BE%E5%8C%BA%E6%B4%BB%E5%8A%A8" class="community">社区活动</a></li>
+                <li><a href="#" class="docs current">API文档</a></li>                
+                <li><a href="http://nodejob.cnodejs.net/" class="jobs">工作机会</a></li>
+                <li><a href="http://cnodejs.org/about" class="about">关于我们</a></li>
+                <li><a href="http://www.nodejs.org" class="home">NodeJS官网</a></li>
+                <li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
+            </ul>
+            <p class="twitter"><a href="http://weibo.com/cnodejs">@cnodejs</a></p>
+        </div>
+
+        <div id="column1" class="interior">
+          <header>
+            <h1>Node.js v0.6.11 中文手册和文档</h1>
+            <div id="gtoc">
+              <p><a href="index_cn.html" name="toc">索引</a></p>
+            </div>
+            <hr>
+          </header>
+
+          <div id="toc">
+            <h2>目录</h2>
+            <ul>
+<li><a href="#stream_cn">流接口</a><ul>
+<li><a href="#stream_cn_1">可读流</a><ul>
+<li><a href="#stream_cn_data">事件： &apos;data&apos;</a></li>
+<li><a href="#stream_cn_end">事件： &apos;end&apos;</a></li>
+<li><a href="#stream_cn_error">事件： &apos;error&apos;</a></li>
+<li><a href="#stream_cn_close">事件： &apos;close&apos;</a></li>
+<li><a href="#stream_cn_stream_readable">stream.readable</a></li>
+<li><a href="#stream_cn_stream_setencoding_encoding">stream.setEncoding(encoding)</a></li>
+<li><a href="#stream_cn_stream_pause">stream.pause()</a></li>
+<li><a href="#stream_cn_stream_resume">stream.resume()</a></li>
+<li><a href="#stream_cn_stream_destroy">stream.destroy()</a></li>
+<li><a href="#stream_cn_stream_destroysoon">stream.destroySoon()</a></li>
+<li><a href="#stream_cn_stream_pipe_destination_options">stream.pipe(destination, [options])</a></li>
+</ul>
+</li>
+<li><a href="#stream_cn_2">可写流</a><ul>
+<li><a href="#stream_cn_drain">事件： &apos;drain&apos;</a></li>
+<li><a href="#stream_cn_error_1">事件： &apos;error&apos;</a></li>
+<li><a href="#stream_cn_close_1">事件： &apos;close&apos;</a></li>
+<li><a href="#stream_cn_pipe">事件： &apos;pipe&apos;</a></li>
+<li><a href="#stream_cn_stream_writable">stream.writable</a></li>
+<li><a href="#stream_cn_stream_write_string_encoding_fd">stream.write(string, [encoding], [fd])</a></li>
+<li><a href="#stream_cn_stream_write_buffer">stream.write(buffer)</a></li>
+<li><a href="#stream_cn_stream_end">stream.end()</a></li>
+<li><a href="#stream_cn_stream_end_string_encoding">stream.end(string, encoding)</a></li>
+<li><a href="#stream_cn_stream_end_buffer">stream.end(buffer)</a></li>
+<li><a href="#stream_cn_stream_destroy_1">stream.destroy()</a></li>
+<li><a href="#stream_cn_stream_destroysoon_1">stream.destroySoon()</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+
+          <div id="apicontent">
+            <h1>流接口<span><a class="mark" href="#stream_cn" id="stream_cn">#</a></span></h1>
+<p>在Node中，流是一个抽象接口，有不少对象会去实现这个接口。例如，对HTTP服务器的请求是一个流，事实上，
+它就是一个标准输出。流本身可读、可写或者两者皆可。所有流也是<code>EventEmitter</code>的实例。
+
+</p>
+<p>借由执行<code>require(&apos;stream&apos;)</code>，可以加载Stream基类。
+
+</p>
+<h2>可读流<span><a class="mark" href="#stream_cn_1" id="stream_cn_1">#</a></span></h2>
+<!--type=class-->
+
+<p>可读流的方法、成员和事件如下：
+
+</p>
+<h3>事件： &apos;data&apos;<span><a class="mark" href="#stream_cn_data" id="stream_cn_data">#</a></span></h3>
+<p><code>function (data) { }</code>
+
+</p>
+<p><code>&apos;data&apos;</code>事件触发后，回调函数默认接收到一个<code>缓冲器</code>对象，而在使用<code>setEncoding()</code>时则会接收到一个字符串。
+
+</p>
+<p>必须注意的是，如果不存这个事件的监听器，那么在<code>可读流</code>触发<code>&apos;data&apos;</code>事件时<em>就会丢失数据</em>。
+
+</p>
+<h3>事件： &apos;end&apos;<span><a class="mark" href="#stream_cn_end" id="stream_cn_end">#</a></span></h3>
+<p><code>function () { }</code>
+
+</p>
+<p>在流接收到EOF（在TCP中是FIN）时触发。这表明，不会再有任何<code>&apos;data&apos;</code>事件发生。
+如果流也是可写的，那么还可继续写操作。
+
+
+</p>
+<h3>事件： &apos;error&apos;<span><a class="mark" href="#stream_cn_error" id="stream_cn_error">#</a></span></h3>
+<p><code>function (exception) { }</code>
+
+</p>
+<p>在接收数据错误时触发。
+
+</p>
+<h3>事件： &apos;close&apos;<span><a class="mark" href="#stream_cn_close" id="stream_cn_close">#</a></span></h3>
+<p><code>function () { }</code>
+
+</p>
+<p>当底层的文件描述符被关闭时触发。并不是所有的流都会触发这个事件。（例如，一个达到的HTTP请求就不会触发<code>&apos;close&apos;</code>。）
+
+</p>
+<h3>stream.readable<span><a class="mark" href="#stream_cn_stream_readable" id="stream_cn_stream_readable">#</a></span></h3>
+<p>默认为<code>true</code>，在发生<code>错误</code>、触发<code>&apos;end&apos;</code>事件或调用<code>destroy()</code>后变为<code>false</code>。
+
+</p>
+<h3>stream.setEncoding(encoding)<span><a class="mark" href="#stream_cn_stream_setencoding_encoding" id="stream_cn_stream_setencoding_encoding">#</a></span></h3>
+<p>这会使data事件回调函数接收到一个字符串，而不是原本的一个<code>缓冲器</code>对象。
+<code>encoding</code>可以是<code>&apos;utf8&apos;</code>，<code>&apos;ascii&apos;</code>或者<code>&apos;base64&apos;</code>。
+
+</p>
+<h3>stream.pause()<span><a class="mark" href="#stream_cn_stream_pause" id="stream_cn_stream_pause">#</a></span></h3>
+<p>暂停<code>&apos;data&apos;</code>事件的触发。
+
+</p>
+<h3>stream.resume()<span><a class="mark" href="#stream_cn_stream_resume" id="stream_cn_stream_resume">#</a></span></h3>
+<p>恢复被<code>pause()</code>暂停的<code>&apos;data&apos;</code>事件的触发。
+
+</p>
+<h3>stream.destroy()<span><a class="mark" href="#stream_cn_stream_destroy" id="stream_cn_stream_destroy">#</a></span></h3>
+<p>关闭底层文件描述符。流不再触发任何事件。
+
+</p>
+<h3>stream.destroySoon()<span><a class="mark" href="#stream_cn_stream_destroysoon" id="stream_cn_stream_destroysoon">#</a></span></h3>
+<p>在写操作队列清空后，关闭文件描述符。
+
+</p>
+<h3>stream.pipe(destination, [options])<span><a class="mark" href="#stream_cn_stream_pipe_destination_options" id="stream_cn_stream_pipe_destination_options">#</a></span></h3>
+<p>这是一个<code>Stream.prototype</code>的方法，可以被所有流对象调用。
+
+</p>
+<p>连接读操作流和作为目标<code>destinaion</code>的写操作流。传入这个流的数据会被写入到<code>destination</code>中。
+在需要时，可以通过暂停和恢复操作来保持目标流和源流的同步。
+
+</p>
+<p>这个方法会返回<code>destination</code>流。
+
+</p>
+<p>模拟Unix的<code>cat</code>命令：
+
+</p>
+<pre><code>process.stdin.resume();
+process.stdin.pipe(process.stdout);</code></pre>
+<p>默认情况下，当源流触发<code>end</code>事件时，目标流回调用<code>end()</code>，于是<code>destination</code>就不可写了。
+设置<code>options</code>为<code>{end: false}</code>，可以保持目标流的始终处于打开状态。
+
+</p>
+<p>这样做可以让<code>process.stdout</code>仍打开着，以便在最后输出&quot;Goodbye&quot;。
+
+</p>
+<pre><code>process.stdin.resume();
+
+process.stdin.pipe(process.stdout, { end: false });
+
+process.stdin.on(&quot;end&quot;, function() {
+  process.stdout.write(&quot;Goodbye\n&quot;);
+});</code></pre>
+<h2>可写流<span><a class="mark" href="#stream_cn_2" id="stream_cn_2">#</a></span></h2>
+<!--type=class-->
+
+<p>可写流的方法、成员和事件如下：
+
+</p>
+<h3>事件： &apos;drain&apos;<span><a class="mark" href="#stream_cn_drain" id="stream_cn_drain">#</a></span></h3>
+<p><code>function () { }</code>
+
+</p>
+<p>在<code>write()</code>方法返回<code>false</code>后，触发这个事件，表明可以放心进行写操作了。
+
+</p>
+<h3>事件： &apos;error&apos;<span><a class="mark" href="#stream_cn_error_1" id="stream_cn_error_1">#</a></span></h3>
+<p><code>function (exception) { }</code>
+
+</p>
+<p>Emitted on error with the exception <code>exception</code>.
+发送错误时触发，回调函数接收一个<code>exception</code>异常。
+
+</p>
+<h3>事件： &apos;close&apos;<span><a class="mark" href="#stream_cn_close_1" id="stream_cn_close_1">#</a></span></h3>
+<p><code>function () { }</code>
+
+</p>
+<p>在底层文件描述符被关闭时触发。
+
+</p>
+<h3>事件： &apos;pipe&apos;<span><a class="mark" href="#stream_cn_pipe" id="stream_cn_pipe">#</a></span></h3>
+<p><code>function (src) { }</code>
+
+</p>
+<p>在把可写流传递给可写流的pipe方法时触发。
+
+</p>
+<h3>stream.writable<span><a class="mark" href="#stream_cn_stream_writable" id="stream_cn_stream_writable">#</a></span></h3>
+<p>默认为<code>true</code>，在发生<code>错误</code>、调用<code>end()</code>或<code>destroy()</code>后变为<code>false</code>。
+
+</p>
+<h3>stream.write(string, [encoding], [fd])<span><a class="mark" href="#stream_cn_stream_write_string_encoding_fd" id="stream_cn_stream_write_string_encoding_fd">#</a></span></h3>
+<p>用指定的<code>encoding</code>把<code>string</code>写入到流中。返回<code>true</code>，表示字符串被成功刷入内核缓冲器中。
+返回<code>false</code>表示内核缓冲器已满，且会在今后的操作中发送这个数据。在内核缓冲器重新清空时，会触发<code>&apos;drean&apos;</code>事件。
+<code>encoding</code>默认为<code>utf8</code>。
+
+</p>
+<p>如果指定了<code>fd</code>参数，<code>string</code>就会被解释成完整的文件描述符而发送给流。仅有UNIX流才支持这个参数，其它流则会忽略掉它。
+如此写入一个文件描述符时，在流清空前关闭这个描述符，会有风险使其发送一个无效（已关闭）的FD。
+
+</p>
+<h3>stream.write(buffer)<span><a class="mark" href="#stream_cn_stream_write_buffer" id="stream_cn_stream_write_buffer">#</a></span></h3>
+<p>用<code>缓冲器</code>对象代替字符串，其余同上。
+
+</p>
+<h3>stream.end()<span><a class="mark" href="#stream_cn_stream_end" id="stream_cn_stream_end">#</a></span></h3>
+<p>用EOF或FIN终止流。
+这个方法允许在关闭流之前把等待写入的数据都发送给流。
+
+</p>
+<h3>stream.end(string, encoding)<span><a class="mark" href="#stream_cn_stream_end_string_encoding" id="stream_cn_stream_end_string_encoding">#</a></span></h3>
+<p>Sends <code>string</code> with the given <code>encoding</code> and terminates the stream with EOF
+or FIN. This is useful to reduce the number of packets sent.
+用给定的<code>encoding</code>发送<code>string</code>，之后用EOF或FIN终止流。这有助于减少包发送的次数。
+
+</p>
+<h3>stream.end(buffer)<span><a class="mark" href="#stream_cn_stream_end_buffer" id="stream_cn_stream_end_buffer">#</a></span></h3>
+<p>用<code>缓冲器</code>对象代替字符串，其余同上。
+
+</p>
+<h3>stream.destroy()<span><a class="mark" href="#stream_cn_stream_destroy_1" id="stream_cn_stream_destroy_1">#</a></span></h3>
+<p>关闭底层文件描述符。流不再触发任何事件。待写入的数据也不会被发送。
+
+</p>
+<h3>stream.destroySoon()<span><a class="mark" href="#stream_cn_stream_destroysoon_1" id="stream_cn_stream_destroysoon_1">#</a></span></h3>
+<p>在写队列清空后，关闭文件描述符。 <code>destroySoon()</code>也是可以直接销毁流的，只要写队列中不再存在数据。
+</p>
+
+          </div>
+        </div>
+    </div>
+    <div id="footer">
+        <ul class="clearfix">
+		
+		<li><a href="http://www.cnodejs.org" class="home">NodeJS中文社区</a></li>
+		<li><a href="http://www.nodejs.org/#download" class="download" target="_blank">NodeJS下载</a></li>
+		<li><a href="http://cnodejs.org/tag/%E7%A4%BE%E5%8C%BA%E6%B4%BB%E5%8A%A8" class="community">社区活动</a></li>
+		<li><a href="#" class="docs current">API文档</a></li>                
+		<li><a href="http://nodejob.cnodejs.net/" class="jobs">工作机会</a></li>
+		<li><a href="http://cnodejs.org/about" class="about">关于我们</a></li>
+		<li><a href="http://www.nodejs.org" class="home">NodeJS官网</a></li>
+		<li><a href="http://search.npmjs.org/" class="npm">npm Registry</a></li>
+             <li><a href="http://weibo.com/cnodejs">@cnodejs</a></li>
+        </ul>
+
+        <p>Copyright 2011 &copy cnodejs.org</p>
+    </div>
+
+  <script src="js/sh_main.js"></script>
+  <script src="js/sh_javascript.min.js"></script>
+  <script>highlight(undefined, undefined, 'pre');</script>
+</body>
+</html>
