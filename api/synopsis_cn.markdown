@@ -2,7 +2,7 @@
 
 <!--type=misc-->
 
-先来看下面这个用Node编写的[web服务器](http.html)响应并输出“Hello World”例子：
+先来看下面这个用Node编写的[web服务器](http_cn.html)响应并输出“Hello World”例子：
 
     var http = require('http');
 

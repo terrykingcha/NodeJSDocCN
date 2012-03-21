@@ -22,7 +22,7 @@
 
 * {Object}
 
-进程对象。 参见[进程对象](process.html#process)章节。
+进程对象。 参见[进程对象](process_cn.html#process)章节。
 
 ## console
 
@@ -30,7 +30,7 @@
 
 * {Object}
 
-用于向stdout和stderr打印信息。参见[标准输入输出](stdio.html)章节。
+用于向stdout和stderr打印信息。参见[标准输入输出](stdio_cn.html)章节。
 
 ## Buffer
 
@@ -38,7 +38,7 @@
 
 * {Object}
 
-用于处理二进制数据。 参见[缓冲类](buffer.html)章节。
+用于处理二进制数据。 参见[缓冲类](buffer_cn.html)章节。
 
 ## require()
 
@@ -46,7 +46,7 @@
 
 * {Function}
 
-用于加载模块。参见[模块](modules.html#modules)章节。
+用于加载模块。参见[模块](modules_cn.html#modules)章节。
 `require`并不是全局函数，而是每个模块的顶级函数。
 
 ## require.resolve()
@@ -102,7 +102,7 @@
 指向当前模块的引用。其中的`module.exports`与`exports`引用的是同一个对象。
 `module`并不是全局变量，而是每个模块的顶级变量。
 
-参见[module system documentation](modules.html)可以获得更多信息。
+参见[module system documentation](modules_cn.html)可以获得更多信息。
 
 
 ## exports
@@ -113,9 +113,9 @@
 `exports`和`module.exports`引用的是同一个对象。
 `exports`并不是全局变量，而是每个模块的顶级变量。
 
-参见[module system documentation](modules.html)可以获得更多信息。
+参见[module system documentation](modules_cn.html)可以获得更多信息。
 
-参见[module section](modules.html)可以获得更多信息。
+参见[module section](modules_cn.html)可以获得更多信息。
 
 ## setTimeout(cb, ms)
 ## clearTimeout(t)
@@ -124,4 +124,4 @@
 
 <!--type=global-->
 
-这些定时器函数都是全局函数。参见[定时器](timers.html)章节。
+这些定时器函数都是全局函数。参见[定时器](timers_cn.html)章节。

@@ -93,7 +93,7 @@
     });
 
 
-## Writable Stream
+## 可写流
 
 <!--type=class-->
 

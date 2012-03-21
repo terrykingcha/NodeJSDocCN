@@ -15,7 +15,7 @@
     console.log('count: %d', count);
 
 如果在第一个字符串中并没有找到格式化标签，那么会对之后的每个参数使用`util.inspect`方法。
-参见[util.format()](util.html#util.format)获取更多信息。
+参见[util.format()](util_cn.html#util.format)获取更多信息。
 
 ## console.info()
 
