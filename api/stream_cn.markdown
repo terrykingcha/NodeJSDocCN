@@ -109,7 +109,6 @@
 
 `function (exception) { }`
 
-Emitted on error with the exception `exception`.
 发送错误时触发，回调函数接收一个`exception`异常。
 
 ### 事件： 'close'
@@ -148,8 +147,6 @@ Emitted on error with the exception `exception`.
 
 ### stream.end(string, encoding)
 
-Sends `string` with the given `encoding` and terminates the stream with EOF
-or FIN. This is useful to reduce the number of packets sent.
 用给定的`encoding`发送`string`，之后用EOF或FIN终止流。这有助于减少包发送的次数。
 
 ### stream.end(buffer)
