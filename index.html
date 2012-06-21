@@ -1,0 +1,145 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Nodejsdoccn by terrykingcha</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/terrykingcha/NodeJSDocCN">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/terrykingcha/NodeJSDocCN/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/terrykingcha/NodeJSDocCN/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>Nodejsdoccn</h1>
+          <p>NodeJS Documents (Simple Chinese Version)</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/terrykingcha">terrykingcha</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></span>
+        </div>
+
+        <h1>官方文档同步标识</h1>
+
+<ul>
+<li>Version: v0.6.11</li>
+<li>Commit hash: 7343f8e776146bf4461348a9130f2c5040a0dfa0</li>
+<li>Date: 2012/2/10 13:58:58</li>
+</ul><h1>最近更新</h1>
+
+<blockquote>
+<p>完成加密模块文档的翻译
+修正HTML模板的一些bug</p>
+</blockquote>
+
+<h1>中文目录和翻译进度</h1>
+
+<ul>
+<li><a href="./NodeJSDocCN/blob/master/api/synopsis_cn.markdown">摘要</a></li>
+<li><a href="./NodeJSDocCN/blob/master/api/globals_cn.markdown">全局对象</a></li>
+<li><a href="./NodeJSDocCN/blob/master/api/stdio_cn.markdown">标准输入输出（console）</a></li>
+<li><a href="./NodeJSDocCN/blob/master/api/timers_cn.markdown">定时器</a></li>
+<li><a href="./NodeJSDocCN/blob/master/api/modules_cn.markdown">模块</a></li>
+<li><a href="./NodeJSDocCN/blob/master/api/addons_cn.markdown">C/C++ 扩展</a></li>
+<li><a href="./NodeJSDocCN/blob/master/api/process_cn.markdown">进程对象（process）</a></li>
+<li><a href="./NodeJSDocCN/blob/master/api/util_cn.markdown">常用工具（util）</a></li>
+<li><a href="./NodeJSDocCN/blob/master/api/events_cn.markdown">事件模块（events）</a></li>
+<li><a href="./NodeJSDocCN/blob/master/api/buffer_cn.markdown">缓冲器类（Buffer）</a></li>
+<li><a href="./NodeJSDocCN/blob/master/api/stream_cn.markdown">流接口（Stream）</a></li>
+<li><a href="./NodeJSDocCN/blob/master/api/crypto_cn.markdown">加密模块（crypto）</a></li>
+<li>安全传输协议（tls/ssl）</li>
+<li>字符串解码</li>
+<li>文件系统（fs）</li>
+<li>路径模块（path）</li>
+<li>网络模块（net）</li>
+<li>数据报文协议（udp/dgram）</li>
+<li>域名服务（dns）</li>
+<li>超文本传输协议（http）</li>
+<li>安全超文本传输协议（https）</li>
+<li>网址解析模块（url）</li>
+<li>查询串解析模块（querystring）</li>
+<li>行读取模块（readline）</li>
+<li>交互式命令行（repl）</li>
+<li>虚拟解析模块（vm）</li>
+<li>子进程模块（child_process）</li>
+<li>断言模块（assert）</li>
+<li>终端模块（tty）</li>
+<li>数据压缩对象（zlib）</li>
+<li>操作系统模块（os）</li>
+<li>调试声明（debugger）</li>
+<li>多核模块（cluster）</li>
+<li>附录
+
+<ul>
+<li>附录 1: 第三方模块推荐</li>
+</ul>
+</li>
+</ul><h1>翻译斟酌</h1>
+
+<h2>addons_cn</h2>
+
+<ul>
+<li>Addon patterns是否保留英文原文（line 80）</li>
+</ul><h2>modules_cn</h2>
+
+<ul>
+<li>关于<code>module.require</code>的作用（line 232）</li>
+</ul><blockquote>
+<p>Note that in order to do this, you must get a reference to the <code>module</code>
+object.  Since <code>require()</code> returns the <code>exports</code>, and the <code>module</code> is
+typically <em>only</em> available within a specific module's code, it must be
+explicitly exported in order to be used.</p>
+
+<p>注意，为了使用require方法，必须先获得对<code>module</code>对象的引用。因为<code>require()</code>会返回<code>exports</code>，
+并且<code>module</code>通常只在特殊的模块代码中有效，所以只在需要用到时才导出。</p>
+</blockquote>
+
+<h2>stream_cn</h2>
+
+<ul>
+<li>关于<code>incoming</code>的正确释义（line 40）</li>
+</ul><blockquote>
+<p>Emitted when the underlying file descriptor has been closed. Not all streams
+will emit this.  (For example, an incoming HTTP request will not emit
+<code>'close'</code>.)</p>
+
+<p>当底层的文件描述符被关闭时触发。并不是所有的流都会触发这个事件。（例如，一个达到的HTTP请求就不会触发<code>'close'</code>。）</p>
+</blockquote>
+
+<h2>crypto_cn</h2>
+
+<ul>
+<li>关于crypto.getDiffieHellman（line 261）</li>
+</ul><blockquote>
+<p>The advantage of using this routine is that the parties don't have to
+generate nor exchange group modulus beforehand, saving both processor and
+communication time.</p>
+
+<p>用这个程序的好处是不需要预先生成多方也不需要改变组模块，可以同时节省处理和通讯的时间。</p>
+</blockquote>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+    
+  </body>
+</html>
